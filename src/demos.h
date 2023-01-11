@@ -13,6 +13,10 @@
 
 #define STARLINES_SZ 100
 
+/* Convert Pico-8 "turns" into radians. */
+#define psin( t ) sin( ((t * 6.28318) / 1.0f) )
+#define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
+
 struct STARLINE {
    double rad_max;
    double rad_inc;
