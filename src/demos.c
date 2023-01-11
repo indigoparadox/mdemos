@@ -1,9 +1,18 @@
 
+#include <stdio.h>
 #include <math.h>
 
 #include <retroflt.h>
 
 #include "demos.h"
+
+static void demos_draw_timer() {
+   char status[STATUS_SZ] = { 0 };
+
+   snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
+
+   retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
+}
 
 void draw_sine_iter( void* data ) {
    struct RETROFLAT_INPUT input_evt;
@@ -20,6 +29,10 @@ void draw_sine_iter( void* data ) {
    case RETROFLAT_KEY_Q:
       retroflat_quit( 0 );
       break;
+   }
+
+   if( retroflat_get_ms() < next ) {
+      return;
    }
 
    /* Drawing */
@@ -54,7 +67,6 @@ void draw_sine_iter( void* data ) {
    retroflat_draw_release( NULL );
 
    next = retroflat_get_ms() + 10;
-   while( retroflat_get_ms() < next ) {}
 
    x_iter++;
    if( 320 <= x_iter ) {
@@ -108,5 +120,61 @@ void draw_sphere_iter( void* data ) {
    retroflat_draw_release( NULL );
 
    m = .002f + fmod( m, 0.03f );
+}
+
+void draw_starlines_iter( void* data ) {
+   int x = 0,
+      y = 0,
+      x_prev = 0,
+      y_prev = 0;
+   struct RETROFLAT_INPUT input_evt;
+   int input = 0;
+   double rad = 0;
+   static long unsigned int next = 0;
+   static double rad_max;
+
+   input = retroflat_poll_input( &input_evt );
+
+   switch( input ) {
+   case RETROFLAT_KEY_Q:
+      retroflat_quit( 0 );
+      break;
+   }
+
+   if( retroflat_get_ms() < next ) {
+      return;
+   }
+
+   /* Drawing */
+
+   retroflat_draw_lock( NULL );
+
+   retroflat_rect(
+      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
+      retroflat_screen_w(), retroflat_screen_h(),
+      RETROFLAT_FLAGS_FILL );
+
+   for( rad = STARLINE_RAD_INC ; rad_max > rad ; rad += STARLINE_RAD_INC  ) {
+      x_prev = (retroflat_screen_w() / 2) + cos( rad - STARLINE_RAD_INC ) 
+         * STARLINE_RADIUS;
+      y_prev = retroflat_screen_h() + sin( rad - STARLINE_RAD_INC )
+         * STARLINE_RADIUS;
+
+      x = (retroflat_screen_w() / 2) + cos( rad ) * STARLINE_RADIUS;
+      y = retroflat_screen_h() + sin( rad ) * STARLINE_RADIUS;
+
+      retroflat_line( NULL, RETROFLAT_COLOR_BLUE, x_prev, y_prev, x, y, 0 );
+   }
+
+   demos_draw_timer();
+
+   retroflat_draw_release( NULL );
+
+   next = retroflat_get_ms() + 100;
+
+   rad_max += STARLINE_RAD_INC;
+   if( 10 <= rad_max ) {
+      rad_max = 0;
+   }
 }
 
