@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define DEMOS_C
 #include "demos.h"
 
 static void demos_draw_timer() {
