@@ -1,8 +1,8 @@
 
 #include <stdio.h>
 #include <math.h>
-
-#include <retroflt.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "demos.h"
 
@@ -122,16 +122,41 @@ void draw_sphere_iter( void* data ) {
    m = .002f + fmod( m, 0.03f );
 }
 
+void create_starline( struct STARLINE* starline ) {
+   starline->rad_inc = fmod( (rand() * 0.1), 0.3 );
+   starline->radius = 10 + (rand() % (retroflat_screen_h() - 20));
+   switch( rand() % 3 ) {
+   case 0:
+      starline->color = RETROFLAT_COLOR_WHITE;
+      break;
+   case 1:
+      starline->color = RETROFLAT_COLOR_BLUE;
+      break;
+   case 2:
+      starline->color = RETROFLAT_COLOR_CYAN;
+      break;
+   }
+}
+
 void draw_starlines_iter( void* data ) {
    int x = 0,
       y = 0,
       x_prev = 0,
-      y_prev = 0;
+      y_prev = 0,
+      i = 0;
    struct RETROFLAT_INPUT input_evt;
    int input = 0;
    double rad = 0;
    static long unsigned int next = 0;
-   static double rad_max;
+   static struct STARLINE starlines[STARLINES_SZ];
+   static int init = 0;
+   static int starlines_sz = 0;
+
+   if( !init ) {
+      /* Do initial setup. */
+      memset( starlines, '\0', STARLINES_SZ * sizeof( struct STARLINE ) );
+      init = 1;
+   }
 
    input = retroflat_poll_input( &input_evt );
 
@@ -154,16 +179,38 @@ void draw_starlines_iter( void* data ) {
       retroflat_screen_w(), retroflat_screen_h(),
       RETROFLAT_FLAGS_FILL );
 
-   for( rad = STARLINE_RAD_INC ; rad_max > rad ; rad += STARLINE_RAD_INC  ) {
-      x_prev = (retroflat_screen_w() / 2) + cos( rad - STARLINE_RAD_INC ) 
-         * STARLINE_RADIUS;
-      y_prev = retroflat_screen_h() + sin( rad - STARLINE_RAD_INC )
-         * STARLINE_RADIUS;
+   if( STARLINES_SZ > starlines_sz && rand() % 20 > 10 ) {
+      create_starline( &(starlines[starlines_sz]) );
+      starlines_sz++;
+   }
 
-      x = (retroflat_screen_w() / 2) + cos( rad ) * STARLINE_RADIUS;
-      y = retroflat_screen_h() + sin( rad ) * STARLINE_RADIUS;
+   for( i = 0 ; starlines_sz > i ; i++ ) {
+      /* Iterate the points on an arc for each starline. */
+      for(
+         rad = starlines[i].rad_inc ;
+         starlines[i].rad_max > rad ;
+         rad += starlines[i].rad_inc
+      ) {
+         /* Calculate previous x/y of a point in the starline using cos/sin. */
+         x_prev = (retroflat_screen_w() / 2) + cos( rad - starlines[i].rad_inc )
+            * starlines[i].radius;
+         y_prev = retroflat_screen_h() + sin( rad - starlines[i].rad_inc )
+            * starlines[i].radius;
 
-      retroflat_line( NULL, RETROFLAT_COLOR_BLUE, x_prev, y_prev, x, y, 0 );
+         /* Calculate x/y of a point in the starline using cos/sin. */
+         x = (retroflat_screen_w() / 2) /* Center on X. */
+            + cos( rad ) * starlines[i].radius;
+         y = retroflat_screen_h() /* Y at the bottom of the screen. */
+            + sin( rad ) * starlines[i].radius;
+
+         /* Draw the line from prev point to current point. */
+         retroflat_line( NULL, starlines[i].color, x_prev, y_prev, x, y, 0 );
+      }
+
+      /* Increment radians if not a full half-circle yet. */
+      if( 10 > starlines[i].rad_max ) {
+         starlines[i].rad_max += starlines[i].rad_inc;
+      }
    }
 
    demos_draw_timer();
@@ -171,10 +218,5 @@ void draw_starlines_iter( void* data ) {
    retroflat_draw_release( NULL );
 
    next = retroflat_get_ms() + 100;
-
-   rad_max += STARLINE_RAD_INC;
-   if( 10 <= rad_max ) {
-      rad_max = 0;
-   }
 }
 
