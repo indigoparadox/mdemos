@@ -24,5 +24,28 @@ void draw_sine_iter( void* data );
 void draw_sphere_iter( void* data );
 void draw_starlines_iter( void* data );
 
+#ifdef DEMOS_C
+
+const char* gc_demo_names[] = {
+   "sine",
+   "sphere",
+   "starlines",
+   ""
+};
+
+retroflat_loop_iter gc_demo_loops[] = {
+   draw_sine_iter,
+   draw_sphere_iter,
+   draw_starlines_iter,
+   NULL
+};
+
+#else
+
+extern const char* gc_demo_names[];
+extern retroflat_loop_iter gc_demo_loops[];
+
+#endif
+
 #endif /* !DEMOS_H */
 
