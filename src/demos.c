@@ -11,7 +11,7 @@ static void demos_draw_timer() {
    char status[STATUS_SZ] = { 0 };
 
    if( g_timer ) {
-      snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
+      retroflat_snprintf( status, STATUS_SZ, "%u", retroflat_get_ms() );
       retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
    }
 }
