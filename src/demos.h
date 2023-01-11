@@ -40,10 +40,13 @@ retroflat_loop_iter gc_demo_loops[] = {
    NULL
 };
 
+int g_timer = 0;
+
 #else
 
 extern const char* gc_demo_names[];
 extern retroflat_loop_iter gc_demo_loops[];
+extern int g_timer;
 
 #endif
 

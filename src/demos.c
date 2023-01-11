@@ -10,9 +10,10 @@
 static void demos_draw_timer() {
    char status[STATUS_SZ] = { 0 };
 
-   snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
-
-   retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
+   if( g_timer ) {
+      snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
+      retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
+   }
 }
 
 void draw_sine_iter( void* data ) {
@@ -64,6 +65,8 @@ void draw_sine_iter( void* data ) {
          x_prev, y_offset + (sin( x_prev ) * SINE_AMPLIFIER),
          x, y_offset + (sin( x ) * SINE_AMPLIFIER), 0 );
    }
+
+   demos_draw_timer();
 
    retroflat_draw_release( NULL );
 
@@ -117,6 +120,8 @@ void draw_sphere_iter( void* data ) {
             RETROFLAT_FLAGS_FILL );
       }
    }
+
+   demos_draw_timer();
 
    retroflat_draw_release( NULL );
 

@@ -24,6 +24,12 @@ static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    return RETROFLAT_OK;
 }
 
+static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
+   g_timer = 1;
+   printf( "timer enabled\n" );
+   return RETROFLAT_OK;
+}
+
 int main( int argc, char** argv ) {
    int retval = 0;
    struct RETROFLAT_ARGS args;
@@ -38,6 +44,10 @@ int main( int argc, char** argv ) {
    args.screen_h = 200;
    args.title = "mdemo";
    args.assets_path = "";
+
+   retroflat_add_arg(
+      RETROFLAT_CLI_SIGIL "t", 0, "show the on-screen timer", 0,
+      demo_timer_cli_cb );
 
    /* Add demos to CLI parser. */
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
