@@ -39,6 +39,7 @@ int main( int argc, char** argv ) {
    args.title = "mdemo";
    args.assets_path = "";
 
+   /* Add demos to CLI parser. */
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
       retroflat_add_arg(
          gc_demo_names[i], 0, "display this demo", 0, demo_cli_cb );
@@ -48,26 +49,6 @@ int main( int argc, char** argv ) {
    if( RETROFLAT_OK != retval ) {
       goto cleanup;
    }
-
-   /* See if a loop was specified. */
-#if 0
-   i = 0;
-   while( '\0' != gc_demo_names[i][0] ) {
-      for( j = 1 ; argc > j ; j++ ) {
-         if( 0 == strncmp(
-            gc_demo_names[i], argv[j], strlen( gc_demo_names[i] )
-         ) ) {
-            printf( "demo loop manually selected: %s\n", gc_demo_names[i] );
-            loop = gc_demo_loops[i];
-            break;
-         }
-      }
-      if( NULL != loop ) {
-         break;
-      }
-      i++;
-   }
-#endif
 
    if( NULL == g_loop ) {
       j = rand() % i;
