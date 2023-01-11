@@ -22,7 +22,7 @@ int main( int argc, char** argv ) {
 
    /* === Main Loop === */
 
-   retroflat_loop( (retroflat_loop_iter)draw_sine_iter, NULL );
+   retroflat_loop( (retroflat_loop_iter)draw_starlines_iter, NULL );
 
 cleanup:
 
