@@ -11,7 +11,7 @@ static void demos_draw_timer() {
    char status[STATUS_SZ] = { 0 };
 
    if( g_timer ) {
-      retroflat_snprintf( status, STATUS_SZ, "%u", retroflat_get_ms() );
+      retroflat_snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
       retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
    }
 }
@@ -22,19 +22,14 @@ void draw_sine_iter( void* data ) {
    int x = 0,
       x_prev = 0,
       input = 0;
-   long unsigned int next = 0;
    double y_offset = 0;
 
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
-   case RETROFLAT_KEY_Q:
+   case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-   }
-
-   if( retroflat_get_ms() < next ) {
-      return;
    }
 
    /* Drawing */
@@ -70,8 +65,6 @@ void draw_sine_iter( void* data ) {
 
    retroflat_draw_release( NULL );
 
-   next = retroflat_get_ms() + 10;
-
    x_iter++;
    if( 320 <= x_iter ) {
       x_iter = 0;
@@ -92,7 +85,7 @@ void draw_sphere_iter( void* data ) {
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
-   case RETROFLAT_KEY_Q:
+   case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
    }
@@ -153,7 +146,6 @@ void draw_starlines_iter( void* data ) {
    struct RETROFLAT_INPUT input_evt;
    int input = 0;
    double rad = 0;
-   static long unsigned int next = 0;
    static struct STARLINE starlines[STARLINES_SZ];
    static int init = 0;
    static int starlines_sz = 0;
@@ -164,16 +156,14 @@ void draw_starlines_iter( void* data ) {
       init = 1;
    }
 
+   printf( "x\n" );
+
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
-   case RETROFLAT_KEY_Q:
+   case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-   }
-
-   if( retroflat_get_ms() < next ) {
-      return;
    }
 
    /* Drawing */
@@ -222,7 +212,5 @@ void draw_starlines_iter( void* data ) {
    demos_draw_timer();
 
    retroflat_draw_release( NULL );
-
-   next = retroflat_get_ms() + 100;
 }
 

@@ -39,7 +39,7 @@ endif
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo mdemd.exe mdemw.exe
+all: mdemo mdemd.exe mdemw.exe mdemnt.exe
 
 # Unix
 
@@ -64,11 +64,11 @@ obj/dos/%.o: %.c
 # WinNT
 
 mdemnt.exe: $(addprefix obj/nt/,$(subst .c,.o,$(MDEMO_C_FILES)))
-	wlink name $@ system nt_win libr wing32 fil {$^}
+	wlink name $@ system nt_win fil {$^}
 
 obj/nt/%.o: %.c
 	$(MD) $(dir $@)
-	wcc386 -DRETROFLAT_WING -bt=nt -i$(WATCOM)/h/nt -DRETROFLAT_API_WIN32 -DRETROFLAT_OS_WIN $(CFLAGS_WATCOM) -fo=$@ $(<:%.c=%)
+	wcc386 -bt=nt -i$(WATCOM)/h/nt -DRETROFLAT_API_WIN32 -DRETROFLAT_OS_WIN $(CFLAGS_WATCOM) -fo=$@ $(<:%.c=%)
 
 # Win386
 
