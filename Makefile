@@ -50,6 +50,15 @@ obj/$(shell uname -s)/%.o: %.c
 	$(MD) $(dir $@)
 	$(CC_GCC) -c -o $@ $< -DRETROFLAT_OS_UNIX $(CFLAGS_GCC)
 
+# WASM
+
+mdemo.html: $(addprefix obj/wasm/,$(subst .c,.o,$(MDEMO_C_FILES)))
+	emcc -o $@ $^ -s USE_SDL=2 -s USE_SDL_TTF=2
+
+obj/wasm/%.o: %.c
+	$(MD) $(dir $@)
+	emcc -c -o $@ $< -DRETROFLAT_OS_WASM -DRETROFLAT_API_SDL2 -s USE_SDL=2 -Imaug/src -s USE_SDL_TTF=2
+
 # DOS
 
 mdemd.exe: $(addprefix obj/dos/,$(subst .c,.o,$(MDEMO_C_FILES)))
