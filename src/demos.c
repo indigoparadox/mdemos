@@ -156,8 +156,6 @@ void draw_starlines_iter( void* data ) {
       init = 1;
    }
 
-   printf( "x\n" );
-
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
@@ -213,4 +211,80 @@ void draw_starlines_iter( void* data ) {
 
    retroflat_draw_release( NULL );
 }
+
+int cast_ray( int sx, int sy, float ray, int depth ) {
+   int x = 0,
+      y = 0;
+   
+   y = sy + (sinf( ray ) * depth);
+   if( y >= RAYMAP_H || y < 0 ) {
+      return 0; /* Ray is off the map on Y. */
+   }
+
+   x = sx + (cosf( ray ) * depth);
+   if( x >= RAYMAP_W || x < 0 ) {
+      return 0; /* Ray is off the map on X. */
+   }
+
+   if( 0 < gc_raymap[y][x] ) {
+      printf( "depth: %d (%d, %d): %d\n", depth, x, y, gc_raymap[y][x] );
+      return depth;
+   } else {
+      return cast_ray( sx, sy, ray, depth + 1 );
+   }
+}
+
+void draw_raycast_iter( void* data ) {
+   int x = 0;
+   struct RETROFLAT_INPUT input_evt;
+   int input = 0;
+   static int init = 0;
+   float ray = 0;
+   int wall = 0;
+
+   if( !init ) {
+      /* Do initial setup. */
+      init = 1;
+   }
+
+   input = retroflat_poll_input( &input_evt );
+
+   switch( input ) {
+   case RETROFLAT_KEY_ESC:
+      retroflat_quit( 0 );
+      break;
+   }
+
+   /* Drawing */
+
+   retroflat_draw_lock( NULL );
+
+   retroflat_rect(
+      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
+      retroflat_screen_w(), retroflat_screen_h(),
+      RETROFLAT_FLAGS_FILL );
+
+   for( x = 0 ; retroflat_screen_w() > x ; x++ ) {
+      /* Ray is a fraction of Pi, for 180 FOV. */
+      /* Ray angle is pixel X over screen W cross-multiplied by ? over Pi. */
+      ray = x * 3.14159 / retroflat_screen_w();
+
+      /* Invert wall heights by subtracting them from 6 (highest is 5). */
+      wall = (6 - cast_ray( 3, 1, ray, 0 )) * 20;
+
+      if( 0 < wall ) {
+         retroflat_line( NULL, RETROFLAT_COLOR_WHITE,
+            x,
+            (retroflat_screen_h() / 2) - (wall / 2),
+            x,
+            (retroflat_screen_h() / 2) + (wall / 2),
+            0 );
+      }
+   }
+
+   demos_draw_timer();
+
+   retroflat_draw_release( NULL );
+}
+
 
