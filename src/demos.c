@@ -72,15 +72,13 @@ void draw_sine_iter( void* data ) {
 }
 
 void draw_sphere_iter( void* data ) {
-   const float b_vals[] = { 0, 0.5f, 0.02f };
-   const float a_vals[] = { 0, 0.5f, 0.03f };
    static float m = 0;
-   double x = 0;
-   double y = 0;
+   double x = 0,
+      y = 0,
+      ir = 0,
+      or = 0;
    struct RETROFLAT_INPUT input_evt;
-   int input = 0,
-      a = 0,
-      b = 0;
+   int input = 0;
 
    input = retroflat_poll_input( &input_evt );
 
@@ -99,15 +97,15 @@ void draw_sphere_iter( void* data ) {
       retroflat_screen_w(), retroflat_screen_h(),
       RETROFLAT_FLAGS_FILL );
 
-   /* Adapted from a demo for another platform; trying to figure out how it
-    * works!
-    */
-   for( b = 0 ; 3 > b ; b++ ) {
-      for( a = 0 ; 3 > a ; a++ ) {
+   for( or = 0 ; 2 * PI > or ; or += 0.4 ) {
+      for( ir = 0 ; 2 * PI > ir ; ir += 0.4 ) {
+         /* Multiple by sin( ir - m ) on X to give a cyclicle leftward(?)
+          * bias to the inner circles, creating sphere illusion.
+          */
          x = (double)(retroflat_screen_w() / 2) 
-            + cos( a_vals[a] - m ) * sin( b_vals[b] ) * 40.0f;
+            + (cos( or ) * sin( ir - m ) * SPHERE_RADIUS);
          y = (double)(retroflat_screen_h() / 2) 
-            + cos( b_vals[b] ) * 40.0f;
+            + (sin( or ) * SPHERE_RADIUS);
          retroflat_rect(
             NULL, RETROFLAT_COLOR_WHITE, x, y, 1, 1,
             RETROFLAT_FLAGS_FILL );
@@ -118,7 +116,10 @@ void draw_sphere_iter( void* data ) {
 
    retroflat_draw_release( NULL );
 
-   m = .002f + fmod( m, 0.03f );
+   /* Increment the rotation for each frame. sin( mod 0.3 ) "jumps,"
+    * so sin( 0.4 ) seems to be the sweet spot.
+    */
+   m = .0126f + fmod( m, 0.4f );
 }
 
 void create_starline( struct STARLINE* starline ) {
@@ -286,5 +287,4 @@ void draw_raycast_iter( void* data ) {
 
    retroflat_draw_release( NULL );
 }
-
 
