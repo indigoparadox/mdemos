@@ -17,6 +17,10 @@
 #define RAYMAP_W 6
 #define RAYMAP_H 6
 
+#define SPHERE_RADIUS 40
+
+#define PI 3.14159
+
 /* Convert Pico-8 "turns" into radians. */
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )
 #define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
