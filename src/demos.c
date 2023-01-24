@@ -269,41 +269,56 @@ void draw_starlines_iter( void* data ) {
 int cast_ray( int sx, int sy, float ray, int depth ) {
    int x = 0,
       y = 0;
+   float frac_depth = depth * 0.1; /* Which tenth of the wall are we hitting? */
    
-   y = sy + (sinf( ray ) * depth);
+   y = sy + (sinf( ray ) * frac_depth);
    if( y >= RAYMAP_H || y < 0 ) {
       return 0; /* Ray is off the map on Y. */
    }
 
-   x = sx + (cosf( ray ) * depth);
+   x = sx + (cosf( ray ) * frac_depth);
    if( x >= RAYMAP_W || x < 0 ) {
       return 0; /* Ray is off the map on X. */
    }
 
    if( 0 < gc_raymap[y][x] ) {
-      printf( "depth: %d (%d, %d): %d\n", depth, x, y, gc_raymap[y][x] );
       return depth;
    } else {
       return cast_ray( sx, sy, ray, depth + 1 );
    }
 }
 
-void draw_raycast_iter( void* data ) {
+void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    int x = 0;
    struct RETROFLAT_INPUT input_evt;
    int input = 0;
    static int init = 0;
    float ray = 0;
-   int wall = 0;
+   float wall_dist[320];
+   static float facing = 0;
+   float wall_dist_corrected = 0; /* Correct for fisheye distortion. */
+   int wall_line = 0;
 
    if( !init ) {
       /* Do initial setup. */
+
+      /* Find projection plane dist using trianble between POV and plane. */
+      data->plane_dist = (retroflat_screen_w() / 2) / tan( RAYCAST_FOV / 2 );
+
       init = 1;
    }
 
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
+   case RETROFLAT_KEY_RIGHT:
+      facing += 0.1f;
+      break;
+
+   case RETROFLAT_KEY_LEFT:
+      facing -= 0.1f;
+      break;
+
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
@@ -321,19 +336,32 @@ void draw_raycast_iter( void* data ) {
    for( x = 0 ; retroflat_screen_w() > x ; x++ ) {
       /* Ray is a fraction of Pi, for 180 FOV. */
       /* Ray angle is pixel X over screen W cross-multiplied by ? over Pi. */
-      ray = x * 3.14159 / retroflat_screen_w();
+      ray = facing + (x * 3.14159 / retroflat_screen_w());
 
-      /* Invert wall heights by subtracting them from 6 (highest is 5). */
-      wall = (6 - cast_ray( 3, 1, ray, 0 )) * 20;
+      wall_dist[x] = cast_ray( 3, 2, ray, 0 );
 
-      if( 0 < wall ) {
+      if( 0 < wall_dist[x] ) {
+         wall_dist_corrected = wall_dist[x] * cos( ray );
+
+         wall_line = RAYCAST_PLANE_DIST * 10 / wall_dist_corrected;
+
          retroflat_line( NULL, RETROFLAT_COLOR_WHITE,
             x,
-            (retroflat_screen_h() / 2) - (wall / 2),
+            (retroflat_screen_h() / 2) - (wall_line / 2),
             x,
-            (retroflat_screen_h() / 2) + (wall / 2),
+            (retroflat_screen_h() / 2) + (wall_line / 2),
             0 );
       }
+   }
+
+   /* Draw minimap. */
+   for( x = 0 ; 320 > x ; x++ ) {
+      ray = facing + (x * 3.14159 / retroflat_screen_w());
+      retroflat_line( NULL, RETROFLAT_COLOR_BLUE,
+         RAYCAST_MINI_CX, RAYCAST_MINI_CY,
+         /* Convert angles to coords and multiply by stored depths. */
+         RAYCAST_MINI_CX + cosf( ray ) * wall_dist[x],
+         RAYCAST_MINI_CY + sinf( ray ) * wall_dist[x], 0 );
    }
 
    demos_draw_timer();
