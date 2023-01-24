@@ -9,10 +9,13 @@
 
 #define SINE_AMPLIFIER 5
 
-#define STARLINE_RADIUS 40
-#define STARLINE_RAD_INC 0.1
+#define STARLINE_RADIUS_MIN 10
+#define STARLINE_RADIUS_MAX (retroflat_screen_h())
+#define STARLINE_ANG_INC 0.01f
+#define STARLINE_START_AT 10000
+#define STARLINE_FLICKER_ODDS 1000
 
-#define STARLINES_SZ 100
+#define STARLINES_SZ 200
 
 #define RAYMAP_W 6
 #define RAYMAP_H 6
@@ -26,8 +29,11 @@
 #define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
 
 struct STARLINE {
-   double rad_max;
-   double rad_inc;
+   double ang_min;
+   double ang_max;
+   double ang_inc;
+   int flicker;
+   int flicker_odd;
    int radius;
    RETROFLAT_COLOR color;
 };
