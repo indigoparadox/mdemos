@@ -33,6 +33,16 @@
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )
 #define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
 
+struct SPHERE_DATA {
+   int init;
+   RETROFLAT_COLOR color;
+   int pulse;
+   int x_v;
+   int y_v;
+   int x_c;
+   int y_c;
+};
+
 struct STARLINE {
    double ang_min;
    double ang_max;
@@ -44,12 +54,13 @@ struct STARLINE {
 };
 
 struct RAYCAST_DATA {
+   int init;
    uint8_t* map;
    float plane_dist;
 };
 
 void draw_sine_iter( void* data );
-void draw_sphere_iter( void* data );
+void draw_sphere_iter( struct SPHERE_DATA* data );
 void draw_starlines_iter( void* data );
 void draw_raycast_iter( struct RAYCAST_DATA* data );
 
@@ -73,16 +84,16 @@ const char* gc_demo_names[] = {
 };
 
 retroflat_loop_iter gc_demo_loops[] = {
-   draw_sine_iter,
-   draw_sphere_iter,
-   draw_starlines_iter,
+   (retroflat_loop_iter)draw_sine_iter,
+   (retroflat_loop_iter)draw_sphere_iter,
+   (retroflat_loop_iter)draw_starlines_iter,
    (retroflat_loop_iter)draw_raycast_iter,
    NULL
 };
 
 size_t gc_demo_data_sz[] = {
    0,
-   0,
+   sizeof( struct SPHERE_DATA ),
    0,
    sizeof( struct RAYCAST_DATA ),
    0
