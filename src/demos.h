@@ -41,6 +41,7 @@ struct SPHERE_DATA {
    int y_v;
    int x_c;
    int y_c;
+   float m;
 };
 
 struct STARLINE_DATA {

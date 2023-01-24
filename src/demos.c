@@ -72,7 +72,6 @@ void draw_sine_iter( void* data ) {
 }
 
 void draw_sphere_iter( struct SPHERE_DATA* data ) {
-   static float m = 0;
    double x = 0,
       y = 0,
       ir = 0,
@@ -143,7 +142,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
          /* Multiple by sin( ir - m ) on X to give a cyclicle leftward(?)
           * bias to the inner circles, creating sphere illusion.
           */
-            sin( ir - m ));
+            sin( ir - data->m ));
          y = (double)data->y_c + (sin( or_pulse ) * SPHERE_RADIUS);
 
          /* Vary shade depending on position. */
@@ -163,7 +162,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
    /* Increment the rotation for each frame. sin( mod 0.3 ) "jumps,"
     * so sin( 0.4 ) seems to be the sweet spot.
     */
-   m = .0126f + fmod( m, 0.4f );
+   data->m = .0126f + fmod( data->m, 0.4f );
 }
 
 void create_starlines( struct STARLINE_DATA* starlines ) {
@@ -309,20 +308,19 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    int x = 0;
    struct RETROFLAT_INPUT input_evt;
    int input = 0;
-   static int init = 0;
    float ray = 0;
    float wall_dist[320];
    static float facing = 0;
    float wall_dist_corrected = 0; /* Correct for fisheye distortion. */
    int wall_line = 0;
 
-   if( !init ) {
+   if( !(data->init) ) {
       /* Do initial setup. */
 
       /* Find projection plane dist using trianble between POV and plane. */
       data->plane_dist = (retroflat_screen_w() / 2) / tan( RAYCAST_FOV / 2 );
 
-      init = 1;
+      data->init = 1;
    }
 
    input = retroflat_poll_input( &input_evt );
