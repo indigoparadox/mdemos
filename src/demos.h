@@ -43,14 +43,16 @@ struct SPHERE_DATA {
    int y_c;
 };
 
-struct STARLINE {
-   double ang_min;
-   double ang_max;
-   double ang_inc;
-   int flicker;
-   int flicker_odd;
-   int radius;
-   RETROFLAT_COLOR color;
+struct STARLINE_DATA {
+   int init;
+   uint32_t start_at;
+   double ang_min[STARLINES_SZ];
+   double ang_max[STARLINES_SZ];
+   double ang_inc[STARLINES_SZ];
+   int flicker[STARLINES_SZ];
+   int flicker_odd[STARLINES_SZ];
+   int radius[STARLINES_SZ];
+   RETROFLAT_COLOR color[STARLINES_SZ];
 };
 
 struct RAYCAST_DATA {
@@ -61,7 +63,7 @@ struct RAYCAST_DATA {
 
 void draw_sine_iter( void* data );
 void draw_sphere_iter( struct SPHERE_DATA* data );
-void draw_starlines_iter( void* data );
+void draw_starlines_iter( struct STARLINE_DATA* data );
 void draw_raycast_iter( struct RAYCAST_DATA* data );
 
 #ifdef DEMOS_C
@@ -94,7 +96,7 @@ retroflat_loop_iter gc_demo_loops[] = {
 size_t gc_demo_data_sz[] = {
    0,
    sizeof( struct SPHERE_DATA ),
-   0,
+   sizeof( struct STARLINE_DATA ),
    sizeof( struct RAYCAST_DATA ),
    0
 };
