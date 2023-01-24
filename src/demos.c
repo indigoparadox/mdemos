@@ -356,9 +356,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
       wall_dist[x] = cast_ray( 3, 2, ray, 0 );
 
       if( 0 < wall_dist[x] ) {
-         wall_dist_corrected = wall_dist[x] * cos( ray );
-
-         wall_line = RAYCAST_PLANE_DIST * 10 / wall_dist_corrected;
+         wall_line = data->plane_dist * 10 / wall_dist[x];
 
          retroflat_line( NULL, RETROFLAT_COLOR_WHITE,
             x,
