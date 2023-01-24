@@ -149,16 +149,18 @@ void draw_sphere_iter( void* data ) {
 }
 
 void create_starline( struct STARLINE* starline ) {
-   starline->rad_inc = fmod( (rand() * 0.1), 0.3 );
-   starline->radius = 10 + (rand() % (retroflat_screen_h() - 20));
-   switch( rand() % 3 ) {
+   starline->ang_inc = STARLINE_ANG_INC;
+   starline->radius = STARLINE_RADIUS_MIN + (rand() % STARLINE_RADIUS_MAX);
+   starline->ang_min = fmod( (rand() * 0.1), PI ) 
+      - PI; /* Make angle negative since we're facing up. */
+   starline->ang_max = starline->ang_min;
+   starline->flicker = rand() % STARLINE_FLICKER_ODDS;
+   starline->flicker_odd = rand() % 2;
+   switch( rand() % 2 ) {
    case 0:
       starline->color = RETROFLAT_COLOR_WHITE;
       break;
    case 1:
-      starline->color = RETROFLAT_COLOR_BLUE;
-      break;
-   case 2:
       starline->color = RETROFLAT_COLOR_CYAN;
       break;
    }
@@ -172,14 +174,21 @@ void draw_starlines_iter( void* data ) {
       i = 0;
    struct RETROFLAT_INPUT input_evt;
    int input = 0;
-   double rad = 0;
+   double angle = 0;
    static struct STARLINE starlines[STARLINES_SZ];
    static int init = 0;
-   static int starlines_sz = 0;
+   static uint32_t start_at = 0;
 
    if( !init ) {
       /* Do initial setup. */
       memset( starlines, '\0', STARLINES_SZ * sizeof( struct STARLINE ) );
+
+      for( i = 0 ; STARLINES_SZ > i ; i++ ) {
+         create_starline( &(starlines[i]) );
+      }
+
+      start_at = retroflat_get_ms() + STARLINE_START_AT;
+
       init = 1;
    }
 
@@ -200,37 +209,55 @@ void draw_starlines_iter( void* data ) {
       retroflat_screen_w(), retroflat_screen_h(),
       RETROFLAT_FLAGS_FILL );
 
-   if( STARLINES_SZ > starlines_sz && rand() % 20 > 10 ) {
-      create_starline( &(starlines[starlines_sz]) );
-      starlines_sz++;
-   }
+   for( i = 0 ; STARLINES_SZ > i ; i++ ) {
 
-   for( i = 0 ; starlines_sz > i ; i++ ) {
+      /* Draw initial star. */
+      x = (retroflat_screen_w() / 2) /* Center on X. */
+         + cos( starlines[i].ang_min ) * starlines[i].radius;
+      y = retroflat_screen_h() /* Y at the bottom of the screen. */
+         + sin( starlines[i].ang_min ) * starlines[i].radius;
+
+      if( 
+         /* Don't draw stars after spinning starts. */
+         start_at >= retroflat_get_ms() &&
+         /* Flicker some stars. */
+         (10 < starlines[i].flicker || 
+         starlines[i].flicker_odd == retroflat_get_ms() % 2)
+      ) {
+         retroflat_rect(
+            NULL, starlines[i].color, x, y, 1, 1, RETROFLAT_FLAGS_FILL );
+      }
+
       /* Iterate the points on an arc for each starline. */
       for(
-         rad = starlines[i].rad_inc ;
-         starlines[i].rad_max > rad ;
-         rad += starlines[i].rad_inc
+         angle = starlines[i].ang_min ;
+         starlines[i].ang_max > angle ;
+         angle += starlines[i].ang_inc
       ) {
          /* Calculate previous x/y of a point in the starline using cos/sin. */
-         x_prev = (retroflat_screen_w() / 2) + cos( rad - starlines[i].rad_inc )
+         x_prev =
+            (retroflat_screen_w() / 2) + cos( angle - starlines[i].ang_inc )
             * starlines[i].radius;
-         y_prev = retroflat_screen_h() + sin( rad - starlines[i].rad_inc )
+         y_prev = retroflat_screen_h() + sin( angle - starlines[i].ang_inc )
             * starlines[i].radius;
 
          /* Calculate x/y of a point in the starline using cos/sin. */
          x = (retroflat_screen_w() / 2) /* Center on X. */
-            + cos( rad ) * starlines[i].radius;
+            + cos( angle ) * starlines[i].radius;
          y = retroflat_screen_h() /* Y at the bottom of the screen. */
-            + sin( rad ) * starlines[i].radius;
+            + sin( angle ) * starlines[i].radius;
 
          /* Draw the line from prev point to current point. */
          retroflat_line( NULL, starlines[i].color, x_prev, y_prev, x, y, 0 );
       }
 
-      /* Increment radians if not a full half-circle yet. */
-      if( 10 > starlines[i].rad_max ) {
-         starlines[i].rad_max += starlines[i].rad_inc;
+      /* Increment radians if not a full circle yet. */
+      if(
+         start_at < retroflat_get_ms() &&
+         /* 2PI is a full circle. */
+         starlines[i].ang_min + (2 * PI) > starlines[i].ang_max
+      ) {
+         starlines[i].ang_max += starlines[i].ang_inc;
       }
    }
 
