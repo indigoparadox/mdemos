@@ -24,6 +24,8 @@
 #define RAYCAST_MINI_CY 30
 #define RAYCAST_PLANE_DIST 25
 #define RAYCAST_FOV 90
+#define RAYCAST_WALL_H 100
+#define RAYCAST_MINIMAP_SCALE 10
 
 #define SPHERE_RADIUS 40
 
@@ -60,6 +62,9 @@ struct RAYCAST_DATA {
    int init;
    uint8_t* map;
    float plane_dist;
+   float ray_inc;
+   int pos_x;
+   int pos_y;
 };
 
 void draw_sine_iter( void* data );
