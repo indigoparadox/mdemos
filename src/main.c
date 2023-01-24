@@ -10,14 +10,14 @@
 
 #include "demos.h"
 
-retroflat_loop_iter g_loop = NULL;
+static int g_loop_idx = -1;
 
 static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    int i = 0;
 
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
       if( 0 == strncmp( gc_demo_names[i], arg, strlen( gc_demo_names[i] ) ) ) {
-         g_loop = gc_demo_loops[i];
+         g_loop_idx = i;
          printf( "demo loop manually selected: %s\n", gc_demo_names[i] );
          break;
       }
@@ -35,8 +35,8 @@ static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
 int main( int argc, char** argv ) {
    int retval = 0;
    struct RETROFLAT_ARGS args;
-   int i = 0,
-      j = 0;
+   int i = 0;
+   void* data = NULL;
 
    /* === Setup === */
 
@@ -63,16 +63,19 @@ int main( int argc, char** argv ) {
       goto cleanup;
    }
 
-   if( NULL == g_loop ) {
-      j = rand() % i;
-      g_loop = gc_demo_loops[j];
+   if( 0 > g_loop_idx ) {
+      g_loop_idx = rand() % i;
       printf( "auto-selecting demo loop (%d of %d): %s\n",
-         j, i, gc_demo_names[j] );
+         g_loop_idx, i, gc_demo_names[g_loop_idx] );
+   }
+
+   if( 0 < gc_demo_data_sz[g_loop_idx] ) {
+      data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
    }
 
    /* === Main Loop === */
 
-   retroflat_loop( (retroflat_loop_iter)g_loop, NULL );
+   retroflat_loop( gc_demo_loops[g_loop_idx], data );
 
 cleanup:
 

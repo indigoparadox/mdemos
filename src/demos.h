@@ -20,6 +20,11 @@
 #define RAYMAP_W 6
 #define RAYMAP_H 6
 
+#define RAYCAST_MINI_CX 50
+#define RAYCAST_MINI_CY 30
+#define RAYCAST_PLANE_DIST 25
+#define RAYCAST_FOV 90
+
 #define SPHERE_RADIUS 40
 
 #define PI 3.14159
@@ -38,14 +43,15 @@ struct STARLINE {
    RETROFLAT_COLOR color;
 };
 
-struct RAYMAP {
+struct RAYCAST_DATA {
    uint8_t* map;
+   float plane_dist;
 };
 
 void draw_sine_iter( void* data );
 void draw_sphere_iter( void* data );
 void draw_starlines_iter( void* data );
-void draw_raycast_iter( void* data );
+void draw_raycast_iter( struct RAYCAST_DATA* data );
 
 #ifdef DEMOS_C
 
@@ -53,7 +59,7 @@ const uint8_t gc_raymap[RAYMAP_W][RAYMAP_H] = {
    { 5, 5, 5, 5, 5, 5 },
    { 5, 0, 0, 0, 0, 5 },
    { 5, 0, 0, 0, 0, 5 },
-   { 5, 0, 0, 0, 0, 5 },
+   { 5, 5, 0, 0, 0, 5 },
    { 5, 0, 0, 0, 0, 5 },
    { 5, 5, 5, 5, 5, 5 }
 };
@@ -70,8 +76,16 @@ retroflat_loop_iter gc_demo_loops[] = {
    draw_sine_iter,
    draw_sphere_iter,
    draw_starlines_iter,
-   draw_raycast_iter,
+   (retroflat_loop_iter)draw_raycast_iter,
    NULL
+};
+
+size_t gc_demo_data_sz[] = {
+   0,
+   0,
+   0,
+   sizeof( struct RAYCAST_DATA ),
+   0
 };
 
 int g_timer = 0;
@@ -81,6 +95,7 @@ int g_timer = 0;
 extern const char* gc_demo_names[];
 extern retroflat_loop_iter gc_demo_loops[];
 extern int g_timer;
+extern size_t gc_demo_data_sz[];
 
 #endif
 
