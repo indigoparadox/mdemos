@@ -79,8 +79,16 @@ void draw_sphere_iter( void* data ) {
       or = 0;
    struct RETROFLAT_INPUT input_evt;
    int input = 0;
+   RETROFLAT_COLOR color;
+   static int x_v = 4;
+   static int y_v = 4;
+   static int x_c = SPHERE_RADIUS + 1;
+   static int y_c = SPHERE_RADIUS + 1;
 
    input = retroflat_poll_input( &input_evt );
+
+   assert( 0 == retroflat_screen_w() % x_v );
+   assert( 0 == retroflat_screen_h() % y_v );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -97,17 +105,35 @@ void draw_sphere_iter( void* data ) {
       retroflat_screen_w(), retroflat_screen_h(),
       RETROFLAT_FLAGS_FILL );
 
+   x_c += x_v;
+   if( 
+      x_c + SPHERE_RADIUS + x_v >= retroflat_screen_w() ||
+      x_c - SPHERE_RADIUS + x_v < 0
+   ) {
+      x_v *= -1;
+   }
+
+   y_c += y_v;
+   if(
+      y_c + SPHERE_RADIUS + y_v >= retroflat_screen_h() ||
+      y_c - SPHERE_RADIUS + y_v < 0
+   ) {
+      y_v *= -1;
+   }
+
    for( or = 0 ; 2 * PI > or ; or += 0.4 ) {
       for( ir = 0 ; 2 * PI > ir ; ir += 0.4 ) {
          /* Multiple by sin( ir - m ) on X to give a cyclicle leftward(?)
           * bias to the inner circles, creating sphere illusion.
           */
-         x = (double)(retroflat_screen_w() / 2) 
-            + (cos( or ) * sin( ir - m ) * SPHERE_RADIUS);
-         y = (double)(retroflat_screen_h() / 2) 
-            + (sin( or ) * SPHERE_RADIUS);
+         x = (double)x_c + (cos( or ) * sin( ir - m ) * SPHERE_RADIUS);
+         y = (double)y_c + (sin( or ) * SPHERE_RADIUS);
+
+         color = or + ir + (rand() % 3) > 8 ?
+            RETROFLAT_COLOR_WHITE : RETROFLAT_COLOR_GRAY;
+
          retroflat_rect(
-            NULL, RETROFLAT_COLOR_WHITE, x, y, 1, 1,
+            NULL, color, x, y, 1, 1,
             RETROFLAT_FLAGS_FILL );
       }
    }
