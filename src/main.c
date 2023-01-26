@@ -65,7 +65,7 @@ int main( int argc, char** argv ) {
 
    if( 0 > g_loop_idx ) {
       g_loop_idx = rand() % i;
-      printf( "auto-selecting demo loop (%d of %d): %s\n",
+      debug_printf( 3, "auto-selecting demo loop (%d of %d): %s\n",
          g_loop_idx, i, gc_demo_names[g_loop_idx] );
    }
 
