@@ -395,7 +395,12 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    /* Draw minimap. */
    for( x = 0 ; 320 > x ; x++ ) {
       ray = data->facing + (x * 3.14159 / retroflat_screen_w());
-      retroflat_line( NULL, RETROFLAT_COLOR_BLUE,
+      if( 0 == x % 2 ) {
+         wall_color = RETROFLAT_COLOR_BLUE;
+      } else {
+         wall_color = RETROFLAT_COLOR_RED;
+      }
+      retroflat_line( NULL, wall_color,
          RAYCAST_MINI_CX, RAYCAST_MINI_CY,
          /* Convert angles to coords and multiply by stored depths. */
          RAYCAST_MINI_CX + cos( ray ) * (wall_dist[x] / RAYCAST_MINIMAP_SCALE),

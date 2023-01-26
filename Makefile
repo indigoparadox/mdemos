@@ -33,7 +33,7 @@ endif
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo.ale mdemo.sdl mdemd.exe mdemw.exe mdemnt.exe
+all: mdemo.ale mdemo.sdl mdemd.exe mdemw.exe mdemnt.exe mdemo.html
 
 # Unix (Allegro)
 
