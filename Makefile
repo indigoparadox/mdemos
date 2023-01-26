@@ -18,37 +18,40 @@ LDFLAGS_WATCOM :=
 # Optional builds.
 ifneq ("$(RELEASE)","RELEASE")
 	CFLAGS_WATCOM += -we -d3
-	CFLAGS_GCC += -DDEBUG -Wall -g -fsanitize=address -fsanitize=leak -fsanitize=undefined
+	CFLAGS_GCC += -DDEBUG -Wall -g -fsanitize=address -fsanitize=leak -fsanitize=undefined -DDEBUG_THRESHOLD=1 -DDEBUG_LOG
 	LDFLAGS_GCC += -g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 endif
 
-ifeq ("$(API)","SDL")
-	ifeq ("$(SDL_VER)","1")
-		CFLAGS_GCC += -DRETROFLAT_API_SDL1 $(shell pkg-config sdl --cflags)
-		LDFLAGS_GCC += $(shell pkg-config sdl --libs) -lSDL_ttf
-	else
-		CFLAGS_GCC += -DRETROFLAT_API_SDL2 $(shell pkg-config sdl2 --cflags)
-		LDFLAGS_GCC += $(shell pkg-config sdl2 --libs) -lSDL_ttf
-	endif
+ifeq ("$(SDL_VER)","1")
+	CFLAGS_SDL_GCC := -DRETROFLAT_API_SDL1 $(shell pkg-config sdl --cflags)
+	LDFLAGS_SDL_GCC := $(shell pkg-config sdl --libs) -lSDL_ttf
 else
-	CFLAGS_GCC += -DRETROFLAT_API_ALLEGRO $(shell pkg-config allegro --cflags)
-	LDFLAGS_GCC += $(shell pkg-config allegro --libs)
-	API := ALLEGRO
+	CFLAGS_SDL_GCC := -DRETROFLAT_API_SDL2 $(shell pkg-config sdl2 --cflags)
+	LDFLAGS_SDL_GCC := $(shell pkg-config sdl2 --libs) -lSDL_ttf
 endif
 
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo mdemd.exe mdemw.exe mdemnt.exe
+all: mdemo.ale mdemo.sdl mdemd.exe mdemw.exe mdemnt.exe
 
-# Unix
+# Unix (Allegro)
 
-mdemo: $(addprefix obj/$(shell uname -s)/,$(subst .c,.o,$(MDEMO_C_FILES)))
-	$(CC_GCC) -o $@ $^ $(LDFLAGS_GCC)
+mdemo.ale: $(addprefix obj/$(shell uname -s)-allegro/,$(subst .c,.o,$(MDEMO_C_FILES)))
+	$(CC_GCC) -o $@ $^ $(LDFLAGS_GCC) $(shell pkg-config allegro --libs)
 
-obj/$(shell uname -s)/%.o: %.c
+obj/$(shell uname -s)-allegro/%.o: %.c
 	$(MD) $(dir $@)
-	$(CC_GCC) -c -o $@ $< -DRETROFLAT_OS_UNIX $(CFLAGS_GCC)
+	$(CC_GCC) -c -o $@ $< -DRETROFLAT_OS_UNIX $(CFLAGS_GCC) -DRETROFLAT_API_ALLEGRO $(shell pkg-config allegro --cflags)
+
+# Unix (SDL)
+
+mdemo.sdl: $(addprefix obj/$(shell uname -s)-sdl/,$(subst .c,.o,$(MDEMO_C_FILES)))
+	$(CC_GCC) -o $@ $^ $(LDFLAGS_GCC) $(LDFLAGS_SDL_GCC)
+
+obj/$(shell uname -s)-sdl/%.o: %.c
+	$(MD) $(dir $@)
+	$(CC_GCC) -c -o $@ $< -DRETROFLAT_OS_UNIX $(CFLAGS_GCC) $(CFLAGS_SDL_GCC)
 
 # WASM
 
@@ -67,8 +70,8 @@ mdemd.exe: $(addprefix obj/dos/,$(subst .c,.o,$(MDEMO_C_FILES)))
 
 obj/dos/%.o: %.c
 	$(MD) $(dir $@)
-	#i586-pc-msdosdjgpp-gcc -fgnu89-inline -I$(ALLEGRO_DJGPP_ROOT)/include -DRETROFLAT_OS_DOS -DRETROFLAT_API_$(API) -c -o $@ $<
-	wcc386 -bt=dos32a -s -3s -DRETROFLAT_OS_DOS -DRETROFLAT_API_$(API) $(CFLAGS_WATCOM) -fo=$@ $(<:%.c=%)
+	#i586-pc-msdosdjgpp-gcc -fgnu89-inline -I$(ALLEGRO_DJGPP_ROOT)/include -DRETROFLAT_OS_DOS -DRETROFLAT_API_ALLEGRO -c -o $@ $<
+	wcc386 -bt=dos32a -s -3s -DRETROFLAT_OS_DOS -DRETROFLAT_API_ALLEGRO $(CFLAGS_WATCOM) -fo=$@ $(<:%.c=%)
 
 # WinNT
 
@@ -94,5 +97,5 @@ obj/win16/%.o: %.c
 # Clean
 
 clean:
-	rm -rf obj mdemo mdemw32.exe *.err mdemd.exe mdemw.exe *.rex mdemnt.exe
+	rm -rf obj mdemo.ale mdemo.sdl mdemw32.exe *.err mdemd.exe mdemw.exe *.rex mdemnt.exe
 

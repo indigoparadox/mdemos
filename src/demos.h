@@ -35,6 +35,11 @@
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )
 #define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
 
+struct SINE_DATA {
+   int init;
+   int x_iter;
+};
+
 struct SPHERE_DATA {
    int init;
    RETROFLAT_COLOR color;
@@ -60,6 +65,7 @@ struct STARLINE_DATA {
 
 struct RAYCAST_DATA {
    int init;
+   float facing;
    uint8_t* map;
    float plane_dist;
    float ray_inc;
@@ -67,10 +73,21 @@ struct RAYCAST_DATA {
    int pos_y;
 };
 
-void draw_sine_iter( void* data );
-void draw_sphere_iter( struct SPHERE_DATA* data );
-void draw_starlines_iter( struct STARLINE_DATA* data );
-void draw_raycast_iter( struct RAYCAST_DATA* data );
+struct PRIMATIVES_DATA {
+   int init;
+};
+
+#define DEMOS_LIST( f ) \
+   f( sine, struct SINE_DATA ) \
+   f( sphere, struct SPHERE_DATA ) \
+   f( starlines, struct STARLINE_DATA ) \
+   f( raycast, struct RAYCAST_DATA ) \
+   f( primatives, struct PRIMATIVES_DATA )
+
+#define DEMOS_LIST_PROTOS( name, data_struct ) \
+   void draw_ ## name ## _iter( data_struct* data );
+
+DEMOS_LIST( DEMOS_LIST_PROTOS )
 
 #ifdef DEMOS_C
 
@@ -83,27 +100,25 @@ const uint8_t gc_raymap[RAYMAP_W][RAYMAP_H] = {
    { 5, 5, 5, 5, 5, 5 }
 };
 
+#define DEMOS_LIST_NAMES( name, data_struct ) #name,
+
 const char* gc_demo_names[] = {
-   "sine",
-   "sphere",
-   "starlines",
-   "raycast",
+   DEMOS_LIST( DEMOS_LIST_NAMES )
    ""
 };
 
+#define DEMOS_LIST_LOOPS( name, data_struct ) \
+   (retroflat_loop_iter)draw_ ## name ## _iter,
+
 retroflat_loop_iter gc_demo_loops[] = {
-   (retroflat_loop_iter)draw_sine_iter,
-   (retroflat_loop_iter)draw_sphere_iter,
-   (retroflat_loop_iter)draw_starlines_iter,
-   (retroflat_loop_iter)draw_raycast_iter,
+   DEMOS_LIST( DEMOS_LIST_LOOPS )
    NULL
 };
 
+#define DEMOS_LIST_DATA_SZ( name, data_struct ) sizeof( data_struct ),
+
 size_t gc_demo_data_sz[] = {
-   0,
-   sizeof( struct SPHERE_DATA ),
-   sizeof( struct STARLINE_DATA ),
-   sizeof( struct RAYCAST_DATA ),
+   DEMOS_LIST( DEMOS_LIST_DATA_SZ )
    0
 };
 
