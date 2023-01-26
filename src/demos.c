@@ -16,9 +16,8 @@ static void demos_draw_timer() {
    }
 }
 
-void draw_sine_iter( void* data ) {
+void draw_sine_iter( struct SINE_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
-   static int x_iter = 0;
    int x = 0,
       x_prev = 0,
       input = 0;
@@ -42,7 +41,7 @@ void draw_sine_iter( void* data ) {
       RETROFLAT_FLAGS_FILL );
 
    /* Draw lines up to the current x_iter with each pixel as X. */
-   for( x = 1 ; x_iter > x ; x++ ) {
+   for( x = 1 ; data->x_iter > x ; x++ ) {
       x_prev = x - 1;
 
       retroflat_line(
@@ -65,9 +64,9 @@ void draw_sine_iter( void* data ) {
 
    retroflat_draw_release( NULL );
 
-   x_iter++;
-   if( 320 <= x_iter ) {
-      x_iter = 0;
+   (data->x_iter)++;
+   if( 320 <= data->x_iter ) {
+      data->x_iter = 0;
    }
 }
 
@@ -149,9 +148,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
          color = or + ir + (rand() % 3) > 8 ?
             RETROFLAT_COLOR_WHITE : RETROFLAT_COLOR_GRAY;
 
-         retroflat_rect(
-            NULL, color, x, y, 1, 1,
-            RETROFLAT_FLAGS_FILL );
+         retroflat_px( NULL, color, x, y, 0 );
       }
    }
 
@@ -288,12 +285,12 @@ int cast_ray( int sx, int sy, float ray, int depth ) {
    /* Which tenth of the wall are we hitting? */
    float frac_depth = depth * (1.0f / RAYCAST_WALL_H);
    
-   y = sy + (sinf( ray ) * frac_depth);
+   y = sy + (sin( ray ) * frac_depth);
    if( y >= RAYMAP_H || y < 0 ) {
       return 0; /* Ray is off the map on Y. */
    }
 
-   x = sx + (cosf( ray ) * frac_depth);
+   x = sx + (cos( ray ) * frac_depth);
    if( x >= RAYMAP_W || x < 0 ) {
       return 0; /* Ray is off the map on X. */
    }
@@ -312,8 +309,6 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    float ray = 0;
    float ray_next = 0;
    float wall_dist[320];
-   static float facing = 0;
-   float wall_dist_corrected = 0; /* Correct for fisheye distortion. */
    int wall_line = 0;
    RETROFLAT_COLOR wall_color;
 
@@ -337,11 +332,11 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
-      facing += 0.1f;
+      data->facing += 0.1f;
       break;
 
    case RETROFLAT_KEY_LEFT:
-      facing -= 0.1f;
+      data->facing -= 0.1f;
       break;
 
    case RETROFLAT_KEY_ESC:
@@ -361,7 +356,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    for( x = 0 ; retroflat_screen_w() > x ; x += 2 ) {
       /* Ray is a fraction of Pi, for 180 FOV. */
       /* Ray angle is pixel X over screen W cross-multiplied by ? over Pi. */
-      ray = facing + (x * data->ray_inc);
+      ray = data->facing + (x * data->ray_inc);
       ray_next = ray + data->ray_inc;
 
       wall_dist[x] = cast_ray( data->pos_x, data->pos_y, ray, 0 );
@@ -372,7 +367,8 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
          continue;
       }
 
-      if( wall_dist[x] > wall_dist[x + 1] ) {
+      /* Compare ray distances, shade accordingly. */
+      if( fabs( wall_dist[x] ) > fabs( wall_dist[x + 1] ) ) {
          wall_color = RETROFLAT_COLOR_WHITE;
       } else {
          wall_color = RETROFLAT_COLOR_GRAY;
@@ -398,16 +394,55 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
 
    /* Draw minimap. */
    for( x = 0 ; 320 > x ; x++ ) {
-      ray = facing + (x * 3.14159 / retroflat_screen_w());
+      ray = data->facing + (x * 3.14159 / retroflat_screen_w());
       retroflat_line( NULL, RETROFLAT_COLOR_BLUE,
          RAYCAST_MINI_CX, RAYCAST_MINI_CY,
          /* Convert angles to coords and multiply by stored depths. */
-         RAYCAST_MINI_CX + cosf( ray ) * (wall_dist[x] / RAYCAST_MINIMAP_SCALE),
-         RAYCAST_MINI_CY + sinf( ray ) * (wall_dist[x] / RAYCAST_MINIMAP_SCALE),
+         RAYCAST_MINI_CX + cos( ray ) * (wall_dist[x] / RAYCAST_MINIMAP_SCALE),
+         RAYCAST_MINI_CY + sin( ray ) * (wall_dist[x] / RAYCAST_MINIMAP_SCALE),
          0 );
    }
 
    demos_draw_timer();
+
+   retroflat_draw_release( NULL );
+}
+
+void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
+   struct RETROFLAT_INPUT input_evt;
+   int input = 0;
+   double i = 0;
+
+   input = retroflat_poll_input( &input_evt );
+
+   switch( input ) {
+   case RETROFLAT_KEY_ESC:
+      retroflat_quit( 0 );
+      break;
+   }
+
+   /* Drawing */
+
+   retroflat_draw_lock( NULL );
+
+   retroflat_rect(
+      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
+      retroflat_screen_w(), retroflat_screen_h(),
+      RETROFLAT_FLAGS_FILL );
+
+   retroflat_ellipse( NULL, RETROFLAT_COLOR_RED,
+      (retroflat_screen_w() / 2) - 20,
+      (retroflat_screen_h() / 2) - 20,
+      40, 40, 0 );
+
+   for( i = 0 ; RETROFLAT_PI * 2 > i ; i += (RETROFLAT_PI / 4) ) {
+      retroflat_line( NULL, RETROFLAT_COLOR_BLUE,
+         (retroflat_screen_w() / 2) + (cos( i ) * 30),
+         (retroflat_screen_h() / 2) + (sin( i ) * 30),
+         (retroflat_screen_w() / 2) + (cos( i ) * 60),
+         (retroflat_screen_h() / 2) + (sin( i ) * 60),
+         0 );
+   }
 
    retroflat_draw_release( NULL );
 }
