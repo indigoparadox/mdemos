@@ -10,7 +10,7 @@ MD := mkdir -p
 
 GLOBAL_DEFINES :=
 
-CFLAGS_GCC := $(GLOBAL_DEFINES) -Imaug/src
+CFLAGS_GCC := $(GLOBAL_DEFINES) -Imaug/src -Wpedantic
 CFLAGS_WATCOM := $(GLOBAL_DEFINES) -imaug/src
 LDFLAGS_GCC := -lm
 LDFLAGS_WATCOM :=

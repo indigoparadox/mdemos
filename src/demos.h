@@ -3,7 +3,6 @@
 #define DEMOS_H
 
 #include <retroflt.h>
-#include <retrodep.h>
 
 #define STATUS_SZ 255
 
