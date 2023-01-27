@@ -1,5 +1,4 @@
 
-#include <time.h>
 #include <stdlib.h>
 
 #define MAUG_C
@@ -39,8 +38,6 @@ int main( int argc, char** argv ) {
    void* data = NULL;
 
    /* === Setup === */
-
-   srand( time( NULL ) );
 
    args.screen_w = 320;
    args.screen_h = 200;

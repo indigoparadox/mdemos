@@ -237,8 +237,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
          (10 < data->flicker[i] || 
          data->flicker_odd[i] == retroflat_get_ms() % 2)
       ) {
-         retroflat_rect(
-            NULL, data->color[i], x, y, 1, 1, RETROFLAT_FLAGS_FILL );
+         retroflat_px( NULL, data->color[i], x, y, 0 );
       }
 
       /* Iterate the points on an arc for each starline. */
