@@ -76,12 +76,25 @@ struct PRIMATIVES_DATA {
    int init;
 };
 
+#ifdef RETROFLAT_API_WIN16
+
+/* Win16 doesn't seem to provide enough stack space to handle raycasting. */
+
+#define DEMOS_RECURSION( f )
+
+#else
+
+#define DEMOS_RECURSION( f ) \
+   f( raycast, struct RAYCAST_DATA )
+
+#endif /* RETROFLAT_API_WIN16 */
+
 #define DEMOS_LIST( f ) \
    f( sine, struct SINE_DATA ) \
    f( sphere, struct SPHERE_DATA ) \
    f( starlines, struct STARLINE_DATA ) \
-   f( raycast, struct RAYCAST_DATA ) \
-   f( primatives, struct PRIMATIVES_DATA )
+   f( primatives, struct PRIMATIVES_DATA ) \
+   DEMOS_RECURSION( f )
 
 #define DEMOS_LIST_PROTOS( name, data_struct ) \
    void draw_ ## name ## _iter( data_struct* data );
