@@ -1,5 +1,9 @@
 *.exe
 *.rex
-mdemo
 obj
 *.err
+*.html
+*.js
+*.wasm
+*.sdl
+*.ale
