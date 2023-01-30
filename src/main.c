@@ -7,9 +7,20 @@
 #define RETROFLT_C
 #include <retroflt.h>
 
+#define RETROGUI_C
+#include <retrogui.h>
+
 #include "demos.h"
 
 static int g_loop_idx = -1;
+static int g_config = 0;
+
+struct RETROGUI_CTL g_ctls[2];
+
+static int demo_cli_c( const char* arg, struct RETROFLAT_ARGS* args ) {
+   g_config = 1;
+   return RETROFLAT_OK;
+}
 
 static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    int i = 0;
@@ -31,11 +42,47 @@ static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    return RETROFLAT_OK;
 }
 
+void demo_ctl_loop( void* data ) {
+   int input = 0;
+   struct RETROFLAT_INPUT input_evt;
+
+   /* Input */
+
+   input = retroflat_poll_input( &input_evt );
+
+   switch( input ) {
+   case RETROFLAT_KEY_ESC:
+      retroflat_quit( 0 );
+      break;
+   }
+
+   input = retrogui_poll_ctls( input, &input_evt, g_ctls, 2 );
+   switch( input ) {
+   case 100:
+      printf( "%d\n", retrogui_get_ctl_sel_idx( &(g_ctls[0]) ) );
+      break;
+   }
+
+   /* Drawing */
+
+   retroflat_draw_lock( NULL );
+
+   retroflat_rect(
+      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
+      retroflat_screen_w(), retroflat_screen_h(),
+      RETROFLAT_FLAGS_FILL );
+
+   retrogui_redraw_ctls( g_ctls, 2 );
+
+   retroflat_draw_release( NULL );
+}
+
 int main( int argc, char** argv ) {
    int retval = 0;
    struct RETROFLAT_ARGS args;
    int i = 0;
    void* data = NULL;
+   char* test_arr[] = { "Test 1", "Test 2", "Test 3" };
 
    /* === Setup === */
 
@@ -47,6 +94,9 @@ int main( int argc, char** argv ) {
    maug_add_arg(
       MAUG_CLI_SIGIL "t", MAUG_CLI_SIGIL_SZ + 1, "show the on-screen timer", 0,
       (maug_cli_cb)demo_timer_cli_cb, NULL, &args );
+   maug_add_arg(
+      MAUG_CLI_SIGIL "c", MAUG_CLI_SIGIL_SZ + 1, "show config dialog", 0,
+      (maug_cli_cb)demo_cli_c, NULL, &args );
 
    /* Add demos to CLI parser. */
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
@@ -70,9 +120,21 @@ int main( int argc, char** argv ) {
       data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
    }
 
+   retrogui_add_listbox(
+      test_arr, 3, 0, 10, 10, 70, 60,
+      RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 101, 0, &(g_ctls[0]) );
+
+   retrogui_add_button( 
+      "Test", 90, 10, 50, 20,
+      RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 100, 0, &(g_ctls[1]) );
+   
    /* === Main Loop === */
 
-   retroflat_loop( gc_demo_loops[g_loop_idx], data );
+   if( g_config ) {
+      retroflat_loop( demo_ctl_loop, NULL );
+   } else {
+      retroflat_loop( gc_demo_loops[g_loop_idx], data );
+   }
 
 cleanup:
 
