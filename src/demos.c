@@ -7,6 +7,27 @@
 #define DEMOS_C
 #include "demos.h"
 
+int32_t g_frames_per_sec = 0;
+int32_t g_frames_since_last = 0;
+uint32_t g_last_frame_ms = 0;
+
+static void demos_draw_fps() {
+   char status[STATUS_SZ] = { 0 };
+   uint32_t now_ms = 0;
+   
+   now_ms = retroflat_get_ms();
+
+   g_frames_since_last++;
+   if( 0 == g_last_frame_ms || g_last_frame_ms + 1000 <= now_ms ) {
+      g_last_frame_ms = now_ms;
+      g_frames_per_sec = g_frames_since_last;
+      g_frames_since_last = 0;
+   }
+
+   maug_snprintf( status, STATUS_SZ, "%lu", g_frames_per_sec );
+   retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
+}
+
 static void demos_draw_timer() {
    char status[STATUS_SZ] = { 0 };
 
@@ -61,6 +82,7 @@ void draw_sine_iter( struct SINE_DATA* data ) {
    }
 
    demos_draw_timer();
+   demos_draw_fps();
 
    retroflat_draw_release( NULL );
 
@@ -153,6 +175,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
    }
 
    demos_draw_timer();
+   demos_draw_fps();
 
    retroflat_draw_release( NULL );
 
@@ -274,6 +297,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
    }
 
    demos_draw_timer();
+   demos_draw_fps();
 
    retroflat_draw_release( NULL );
 }
@@ -330,12 +354,41 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
+   case RETROFLAT_KEY_UP:
+      /* Move forward in facing dir. */
+      if( PI_4 <= data->facing && 3 * PI_4 > data->facing ) {
+         if( data->pos_x - 2 >= 0 ) {
+            data->pos_x -= 1;
+         }
+
+      } else if( 3 * PI_4 <= data->facing && 5 * PI_4 > data->facing ) {
+         if( data->pos_y - 2 >= 0 ) {
+            data->pos_y -= 1;
+         }
+
+      } else if( 5 * PI_4 <= data->facing && 7 * PI_4 > data->facing ) {
+         if( data->pos_x + 2 < RAYMAP_W ) {
+            data->pos_x += 1;
+         }
+
+      } else {
+         if( data->pos_y + 2 < RAYMAP_H ) {
+            data->pos_y += 1;
+         }
+      }
+      break;
    case RETROFLAT_KEY_RIGHT:
       data->facing += 0.1f;
+      if( (2 * RETROFLAT_PI) <= data->facing ) {
+         data->facing = 0;
+      }
       break;
 
    case RETROFLAT_KEY_LEFT:
       data->facing -= 0.1f;
+      if( data->facing < 0 ) {
+         data->facing = (2 * RETROFLAT_PI) - 0.1;
+      }
       break;
 
    case RETROFLAT_KEY_ESC:
@@ -408,6 +461,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    }
 
    demos_draw_timer();
+   demos_draw_fps();
 
    retroflat_draw_release( NULL );
 }
@@ -420,6 +474,14 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    input = retroflat_poll_input( &input_evt );
 
    switch( input ) {
+   case RETROFLAT_KEY_RIGHT:
+      data->rotate += 0.1f;
+      break;
+
+   case RETROFLAT_KEY_LEFT:
+      data->rotate -= 0.1f;
+      break;
+
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
@@ -441,12 +503,15 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
 
    for( i = 0 ; RETROFLAT_PI * 2 > i ; i += (RETROFLAT_PI / 4) ) {
       retroflat_line( NULL, RETROFLAT_COLOR_BLUE,
-         (retroflat_screen_w() / 2) + (cos( i ) * 30),
-         (retroflat_screen_h() / 2) + (sin( i ) * 30),
-         (retroflat_screen_w() / 2) + (cos( i ) * 60),
-         (retroflat_screen_h() / 2) + (sin( i ) * 60),
+         (retroflat_screen_w() / 2) + (cos( i + data->rotate ) * 30),
+         (retroflat_screen_h() / 2) + (sin( i + data->rotate ) * 30),
+         (retroflat_screen_w() / 2) + (cos( i + data->rotate ) * 60),
+         (retroflat_screen_h() / 2) + (sin( i + data->rotate ) * 60),
          0 );
    }
+
+   demos_draw_timer();
+   demos_draw_fps();
 
    retroflat_draw_release( NULL );
 }

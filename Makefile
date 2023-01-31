@@ -6,6 +6,10 @@ C_FILES := src/main.c src/demos.c
 
 include maug/Makefile.inc
 
+LDFLAGS_GCC += -lm
+CFLAGS_WATCOM += -DRETROFLAT_SOFT_SHAPES
+CFLAGS_GCC += -DRETROFLAT_SOFT_SHAPES
+
 # Target-specific options.
 .PHONY: clean
 
