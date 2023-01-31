@@ -308,21 +308,18 @@ int cast_ray( int sx, int sy, float ray, int depth ) {
    /* Which tenth of the wall are we hitting? */
    float frac_depth = depth * (1.0f / RAYCAST_WALL_H);
    
-   y = sy + (sin( ray ) * frac_depth);
-   if( y >= RAYMAP_H || y < 0 ) {
-      return 0; /* Ray is off the map on Y. */
-   }
+   do {
+      y = sy + (sin( ray ) * frac_depth);
+      x = sx + (cos( ray ) * frac_depth);
+      depth += 1;
+      frac_depth = depth * (1.0f / RAYCAST_WALL_H);
+   } while(
+      (y < RAYMAP_H || y >= 0) &&
+      (x < RAYMAP_W || x >= 0) &&
+      0 == gc_raymap[y][x]
+   );
 
-   x = sx + (cos( ray ) * frac_depth);
-   if( x >= RAYMAP_W || x < 0 ) {
-      return 0; /* Ray is off the map on X. */
-   }
-
-   if( 0 < gc_raymap[y][x] ) {
-      return depth;
-   } else {
-      return cast_ray( sx, sy, ray, depth + 1 );
-   }
+   return depth;
 }
 
 void draw_raycast_iter( struct RAYCAST_DATA* data ) {
@@ -383,7 +380,6 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
       break;
 
    case RETROFLAT_KEY_RIGHT:
-      debug_printf( 1, "facing: %f", data->facing );
       data->facing += 0.1f;
       if( (2 * RETROFLAT_PI) <= data->facing ) {
          data->facing = 0;
