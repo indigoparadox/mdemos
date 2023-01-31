@@ -28,7 +28,8 @@ static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
       if( 0 == strncmp( gc_demo_names[i], arg, strlen( gc_demo_names[i] ) ) ) {
          g_loop_idx = i;
-         printf( "demo loop manually selected: %s\n", gc_demo_names[i] );
+         debug_printf( 3, "demo loop manually selected: %s",
+            gc_demo_names[i] );
          break;
       }
    }
@@ -38,7 +39,7 @@ static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
 
 static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    g_timer = 1;
-   printf( "timer enabled\n" );
+   debug_printf( 3, "timer enabled" );
    return RETROFLAT_OK;
 }
 

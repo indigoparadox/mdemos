@@ -17,7 +17,7 @@
 #define STARLINES_SZ 200
 
 #define RAYMAP_W 6
-#define RAYMAP_H 6
+#define RAYMAP_H 7
 
 #define RAYCAST_MINI_CX 50
 #define RAYCAST_MINI_CY 30
@@ -29,6 +29,8 @@
 #define SPHERE_RADIUS 40
 
 #define PI 3.14159
+
+#define PI_4 (PI / 4)
 
 /* Convert Pico-8 "turns" into radians. */
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )
@@ -73,6 +75,7 @@ struct RAYCAST_DATA {
 };
 
 struct PRIMATIVES_DATA {
+   float rotate;
    int init;
 };
 
@@ -103,11 +106,12 @@ DEMOS_LIST( DEMOS_LIST_PROTOS )
 
 #ifdef DEMOS_C
 
-const uint8_t gc_raymap[RAYMAP_W][RAYMAP_H] = {
+const uint8_t gc_raymap[RAYMAP_H][RAYMAP_W] = {
    { 5, 5, 5, 5, 5, 5 },
    { 5, 0, 0, 0, 0, 5 },
    { 5, 0, 0, 0, 0, 5 },
    { 5, 5, 0, 0, 0, 5 },
+   { 5, 0, 0, 0, 0, 5 },
    { 5, 0, 0, 0, 0, 5 },
    { 5, 5, 5, 5, 5, 5 }
 };
