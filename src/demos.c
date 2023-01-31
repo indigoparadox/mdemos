@@ -338,11 +338,11 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    if( !(data->init) ) {
       /* Do initial setup. */
 
-      /* Find projection plane dist using trianble between POV and plane. */
+      /* Find projection plane dist using triangle between POV and plane. */
       data->plane_dist = (retroflat_screen_w() / 2) / tan( RAYCAST_FOV / 2 );
 
       /* Each ray is this many radians off to the right of the last. */
-      data->ray_inc = 3.14159 / retroflat_screen_w();
+      data->ray_inc = (2 * PI_4) / retroflat_screen_w();
 
       /* Start off at this position on the tilemap. */
       data->pos_x = 3;
@@ -357,27 +357,33 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    case RETROFLAT_KEY_UP:
       /* Move forward in facing dir. */
       if( PI_4 <= data->facing && 3 * PI_4 > data->facing ) {
+         /* Down */
+         if( data->pos_y + 2 < RAYMAP_H ) {
+            data->pos_y += 1;
+         }
+
+      } else if( 3 * PI_4 <= data->facing && 5 * PI_4 > data->facing ) {
+         /* Left */
          if( data->pos_x - 2 >= 0 ) {
             data->pos_x -= 1;
          }
 
-      } else if( 3 * PI_4 <= data->facing && 5 * PI_4 > data->facing ) {
+      } else if( 5 * PI_4 <= data->facing && 7 * PI_4 > data->facing ) {
+         /* Up */
          if( data->pos_y - 2 >= 0 ) {
             data->pos_y -= 1;
          }
 
-      } else if( 5 * PI_4 <= data->facing && 7 * PI_4 > data->facing ) {
+      } else {
+         /* Right */
          if( data->pos_x + 2 < RAYMAP_W ) {
             data->pos_x += 1;
          }
-
-      } else {
-         if( data->pos_y + 2 < RAYMAP_H ) {
-            data->pos_y += 1;
-         }
       }
       break;
+
    case RETROFLAT_KEY_RIGHT:
+      debug_printf( 1, "facing: %f", data->facing );
       data->facing += 0.1f;
       if( (2 * RETROFLAT_PI) <= data->facing ) {
          data->facing = 0;
@@ -408,7 +414,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    for( x = 0 ; retroflat_screen_w() > x ; x += 2 ) {
       /* Ray is a fraction of Pi, for 180 FOV. */
       /* Ray angle is pixel X over screen W cross-multiplied by ? over Pi. */
-      ray = data->facing + (x * data->ray_inc);
+      ray = data->facing + ((x - (retroflat_screen_w() / 2)) * data->ray_inc);
       ray_next = ray + data->ray_inc;
 
       wall_dist[x] = cast_ray( data->pos_x, data->pos_y, ray, 0 );
@@ -427,7 +433,11 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
       }
 
       /* Draw the wall. */
-      wall_line = data->plane_dist * RAYCAST_WALL_H / wall_dist[x];
+      wall_line = data->plane_dist * RAYCAST_WALL_H / 
+         /* Multiply by cos( angle between x beam and center ) to correct
+          * fisheye effect.
+          */
+         (wall_dist[x] * cos( ray - data->facing ));
       retroflat_line( NULL, wall_color,
          x,
          (retroflat_screen_h() / 2) - (wall_line / 2),
@@ -435,7 +445,11 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
          (retroflat_screen_h() / 2) + (wall_line / 2),
          0 );
 
-      wall_line = data->plane_dist * RAYCAST_WALL_H / wall_dist[x + 1];
+      wall_line = data->plane_dist * RAYCAST_WALL_H /
+         /* Multiply by cos( angle between x beam and center ) to correct
+          * fisheye effect.
+          */
+         (wall_dist[x + 1] * cos( ray - data->facing ));
       retroflat_line( NULL, wall_color,
          x + 1,
          (retroflat_screen_h() / 2) - (wall_line / 2),
@@ -445,8 +459,8 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    }
 
    /* Draw minimap. */
-   for( x = 0 ; 320 > x ; x++ ) {
-      ray = data->facing + (x * 3.14159 / retroflat_screen_w());
+   for( x = 0 ; retroflat_screen_w() > x ; x++ ) {
+      ray = data->facing + ((x - retroflat_screen_w() / 2) * data->ray_inc);
       if( 0 == x % 2 ) {
          wall_color = RETROFLAT_COLOR_BLUE;
       } else {
