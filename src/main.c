@@ -139,7 +139,15 @@ int main( int argc, char** argv ) {
 
 cleanup:
 
+#ifndef RETROFLAT_OS_WASM
+
    retroflat_shutdown( retval );
+
+   if( NULL != data ) {
+      free( data );
+   }
+
+#endif /* !RETROFLAT_OS_WASM */
 
    return retval;
 }
