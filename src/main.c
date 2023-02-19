@@ -46,6 +46,18 @@ static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
 void demo_ctl_loop( void* data ) {
    int input = 0;
    struct RETROFLAT_INPUT input_evt;
+   char* test_arr[] = { "Test 1", "Test 2", "Test 3" };
+   static int init = 0;
+
+   if( !init ) {
+      retrogui_add_listbox(
+         test_arr, 3, 0, 10, 10, 70, 60,
+         RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 101, 0, &(g_ctls[0]) );
+
+      retrogui_add_button( 
+         "Test", 90, 10, 50, 20,
+         RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 100, 0, &(g_ctls[1]) );
+   }
 
    /* Input */
 
@@ -83,7 +95,6 @@ int main( int argc, char** argv ) {
    struct RETROFLAT_ARGS args;
    int i = 0;
    void* data = NULL;
-   char* test_arr[] = { "Test 1", "Test 2", "Test 3" };
 
    /* === Setup === */
 
@@ -118,17 +129,11 @@ int main( int argc, char** argv ) {
    }
 
    if( 0 < gc_demo_data_sz[g_loop_idx] ) {
+      debug_printf(
+         2, "allocating data (%d bytes)...", gc_demo_data_sz[g_loop_idx] );
       data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
    }
 
-   retrogui_add_listbox(
-      test_arr, 3, 0, 10, 10, 70, 60,
-      RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 101, 0, &(g_ctls[0]) );
-
-   retrogui_add_button( 
-      "Test", 90, 10, 50, 20,
-      RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 100, 0, &(g_ctls[1]) );
-   
    /* === Main Loop === */
 
    if( g_config ) {
