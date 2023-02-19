@@ -4,16 +4,18 @@
 SCREENSAVER=1
 C_FILES := src/main.c src/demos.c
 
-include maug/Makefile.inc
+LIBS_GCC := -lm
+DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES
+DEFINES_GCC := -DRETROFLAT_SOFT_SHAPES
 
-LDFLAGS_GCC += -lm
-CFLAGS_WATCOM += -DRETROFLAT_SOFT_SHAPES
-CFLAGS_GCC += -DRETROFLAT_SOFT_SHAPES
+include maug/Makefile.inc
 
 # Target-specific options.
 .PHONY: clean
 
 all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html
+
+$(eval $(call TGTNDSLIBN,mdemo,,mdemo.bmp))
 
 # Unix (Allegro)
 
