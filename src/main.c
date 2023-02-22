@@ -130,7 +130,8 @@ int main( int argc, char** argv ) {
 
    if( 0 < gc_demo_data_sz[g_loop_idx] ) {
       debug_printf(
-         2, "allocating data (%d bytes)...", gc_demo_data_sz[g_loop_idx] );
+         2, "allocating data (" SIZE_T_FMT " bytes)...",
+         gc_demo_data_sz[g_loop_idx] );
       data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
    }
 
