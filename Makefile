@@ -13,7 +13,7 @@ include maug/Makefile.inc
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html
+all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe
 
 $(eval $(call TGTNDSLIBN,mdemo,,mdemo.bmp))
 
@@ -35,7 +35,13 @@ $(eval $(call TGTDOSALE,mdemo))
 
 # WinNT
 
+$(eval $(call TGTWINICO,mdemo))
+
 $(eval $(call TGTWINNT,mdemo))
+
+$(eval $(call TGTWINNTGCC,mdemo))
+
+$(eval $(call TGTWIN64GCC,mdemo))
 
 # Win386
 
