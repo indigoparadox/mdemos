@@ -23,6 +23,8 @@ $(eval $(call TGTUNIXALE,mdemo))
 
 # Unix (SDL)
 
+$(eval $(call TGTSDLICO,mdemo))
+
 $(eval $(call TGTUNIXSDL,mdemo))
 
 # WASM
