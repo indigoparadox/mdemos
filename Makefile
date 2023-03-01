@@ -15,7 +15,7 @@ include maug/Makefile.inc
 
 all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe
 
-$(eval $(call TGTNDSLIBN,mdemo,,mdemo.bmp))
+$(eval $(call TGTNDSLIBN,mdemo,mdemo.bmp))
 
 # Unix (Allegro)
 
