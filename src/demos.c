@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <maug.h>
+
 #define DEMOS_C
 #include "demos.h"
 
@@ -25,7 +27,8 @@ static void demos_draw_fps() {
    }
 
    maug_snprintf( status, STATUS_SZ, "%lu", g_frames_per_sec );
-   retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
+   retroflat_string(
+      NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
 }
 
 static void demos_draw_timer() {
@@ -33,7 +36,8 @@ static void demos_draw_timer() {
 
    if( g_timer ) {
       maug_snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
-      retroflat_string( NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
+      retroflat_string(
+         NULL, RETROFLAT_COLOR_WHITE, status, 0, NULL, 0, 0, 0 );
    }
 }
 
