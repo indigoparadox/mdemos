@@ -50,6 +50,8 @@ void draw_sine_iter( struct SINE_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
+   retrocon_input( &(data->con), &input );
+
    switch( input ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
@@ -84,6 +86,8 @@ void draw_sine_iter( struct SINE_DATA* data ) {
          x_prev, y_offset + (sin( x_prev ) * SINE_AMPLIFIER),
          x, y_offset + (sin( x ) * SINE_AMPLIFIER), 0 );
    }
+
+   retrocon_display( &(data->con), NULL );
 
    demos_draw_timer();
    demos_draw_fps();
@@ -120,6 +124,8 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
 
    assert( 0 == retroflat_screen_w() % data->x_v );
    assert( 0 == retroflat_screen_h() % data->y_v );
+
+   retrocon_input( &(data->con), &input );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -178,6 +184,8 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
       }
    }
 
+   retrocon_display( &(data->con), NULL );
+
    demos_draw_timer();
    demos_draw_fps();
 
@@ -233,6 +241,8 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
    }
 
    input = retroflat_poll_input( &input_evt );
+
+   retrocon_input( &(data->con), &input );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -300,6 +310,8 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
       }
    }
 
+   retrocon_display( &(data->con), NULL );
+
    demos_draw_timer();
    demos_draw_fps();
 
@@ -353,6 +365,8 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    }
 
    input = retroflat_poll_input( &input_evt );
+
+   retrocon_input( &(data->con), &input );
 
    switch( input ) {
    case RETROFLAT_KEY_UP:
@@ -474,6 +488,8 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
          0 );
    }
 
+   retrocon_display( &(data->con), NULL );
+
    demos_draw_timer();
    demos_draw_fps();
 
@@ -486,6 +502,8 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    double i = 0;
 
    input = retroflat_poll_input( &input_evt );
+
+   retrocon_input( &(data->con), &input );
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
@@ -523,6 +541,8 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
          (retroflat_screen_h() / 2) + (sin( i + data->rotate ) * 60),
          0 );
    }
+
+   retrocon_display( &(data->con), NULL );
 
    demos_draw_timer();
    demos_draw_fps();

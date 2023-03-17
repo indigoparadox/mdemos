@@ -10,6 +10,9 @@
 #define RETROGUI_C
 #include <retrogui.h>
 
+#define RETROCON_C
+#include <retrocon.h>
+
 #include "demos.h"
 
 static int g_loop_idx = -1;
@@ -133,6 +136,10 @@ int main( int argc, char** argv ) {
          2, "allocating data (" SIZE_T_FMT " bytes)...",
          gc_demo_data_sz[g_loop_idx] );
       data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
+
+      ((struct MDEMOS_DATA*)data)->con.lbuffer_color = RETROFLAT_COLOR_WHITE;
+      ((struct MDEMOS_DATA*)data)->con.sbuffer_color = RETROFLAT_COLOR_GRAY;
+      ((struct MDEMOS_DATA*)data)->con.bg_color = RETROFLAT_COLOR_DARKBLUE;
    }
 
    /* === Main Loop === */
