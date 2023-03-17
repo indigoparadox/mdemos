@@ -3,6 +3,7 @@
 #define DEMOS_H
 
 #include <retroflt.h>
+#include <retrocon.h>
 
 #define STATUS_SZ 255
 
@@ -36,8 +37,14 @@
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )
 #define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
 
+struct MDEMOS_DATA {
+   int init;
+   struct RETROCON con;
+};
+
 struct SINE_DATA {
    int init;
+   struct RETROCON con;
    int x_iter;
 };
 
@@ -50,10 +57,12 @@ struct SPHERE_DATA {
    int x_c;
    int y_c;
    float m;
+   struct RETROCON con;
 };
 
 struct STARLINE_DATA {
    int init;
+   struct RETROCON con;
    uint32_t start_at;
    double ang_min[STARLINES_SZ];
    double ang_max[STARLINES_SZ];
@@ -66,6 +75,7 @@ struct STARLINE_DATA {
 
 struct RAYCAST_DATA {
    int init;
+   struct RETROCON con;
    float facing;
    uint8_t* map;
    float plane_dist;
@@ -75,8 +85,9 @@ struct RAYCAST_DATA {
 };
 
 struct PRIMATIVES_DATA {
-   float rotate;
    int init;
+   struct RETROCON con;
+   float rotate;
 };
 
 #define DEMOS_LIST( f ) \
