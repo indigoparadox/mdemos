@@ -98,8 +98,12 @@ int main( int argc, char** argv ) {
    struct RETROFLAT_ARGS args;
    int i = 0;
    void* data = NULL;
+   const int negative_one = -1;
+   RETROFLAT_CONFIG config;
 
    /* === Setup === */
+
+   maug_mzero( &args, sizeof( struct RETROFLAT_ARGS ) );
 
    args.screen_w = 320;
    args.screen_h = 200;
@@ -125,10 +129,25 @@ int main( int argc, char** argv ) {
       goto cleanup;
    }
 
+   retval = retroflat_config_open( &config );
+   if( MERROR_OK == retval ) {
+      retroflat_config_read(
+         &config, "default", "demo", RETROFLAT_BUFFER_INT,
+         &g_loop_idx, sizeof( int ),
+         &negative_one, sizeof( int ) );
+
+      retroflat_config_close( &config );
+   }
+   retval = MERROR_OK;
+
    if( 0 > g_loop_idx ) {
       g_loop_idx = rand() % i;
-      debug_printf( 3, "auto-selecting demo loop (%d of %d): %s\n",
+      debug_printf( 3, "auto-selecting demo loop (%d of %d): %s",
          g_loop_idx, i, gc_demo_names[g_loop_idx] );
+   } else {
+      debug_printf( 3,
+         "demo loop specified in command line or config: %s (%d)",
+         gc_demo_names[g_loop_idx], g_loop_idx );
    }
 
    if( 0 < gc_demo_data_sz[g_loop_idx] ) {
