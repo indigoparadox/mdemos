@@ -35,19 +35,23 @@ $(eval $(call TGTWASMSDL,mdemo))
 
 $(eval $(call TGTDOSALE,mdemo))
 
-# WinNT
+# Win386
 
 $(eval $(call TGTWINICO,mdemo))
+
+$(eval $(call TGTWIN386,mdemo))
+
+WING=1
+
+$(eval $(call TGTWIN16,mdemo))
+
+# WinNT
 
 $(eval $(call TGTWINNT,mdemo))
 
 $(eval $(call TGTWINNTGCC,mdemo))
 
 $(eval $(call TGTWIN64GCC,mdemo))
-
-# Win386
-
-$(eval $(call TGTWIN386,mdemo))
 
 # Clean
 
