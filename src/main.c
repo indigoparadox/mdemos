@@ -129,7 +129,7 @@ int main( int argc, char** argv ) {
       goto cleanup;
    }
 
-   retval = retroflat_config_open( &config );
+   retval = retroflat_config_open( &config, 0 );
    if( MERROR_OK == retval ) {
       retroflat_config_read(
          &config, "default", "demo", RETROFLAT_BUFFER_INT,

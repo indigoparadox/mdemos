@@ -1,6 +1,7 @@
 
 # vim: ft=make noexpandtab
 
+WING=1
 SCREENSAVER=1
 C_FILES := src/main.c src/demos.c
 
@@ -40,8 +41,6 @@ $(eval $(call TGTDOSALE,mdemo))
 $(eval $(call TGTWINICO,mdemo))
 
 $(eval $(call TGTWIN386,mdemo))
-
-WING=1
 
 $(eval $(call TGTWIN16,mdemo))
 
