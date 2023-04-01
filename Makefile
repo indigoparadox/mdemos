@@ -1,7 +1,6 @@
 
 # vim: ft=make noexpandtab
 
-WING=1
 SCREENSAVER=1
 C_FILES := src/main.c src/demos.c
 
