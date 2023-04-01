@@ -18,7 +18,9 @@
 static int g_loop_idx = -1;
 static int g_config = 0;
 
-struct RETROGUI_CTL g_ctls[2];
+struct DEMO_CTL_DATA {
+   struct RETROGUI gui;
+};
 
 static int demo_cli_c( const char* arg, struct RETROFLAT_ARGS* args ) {
    g_config = 1;
@@ -46,20 +48,42 @@ static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    return RETROFLAT_OK;
 }
 
-void demo_ctl_loop( void* data ) {
+void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
    int input = 0;
    struct RETROFLAT_INPUT input_evt;
-   char* test_arr[] = { "Test 1", "Test 2", "Test 3" };
+   /* char* test_arr[] = { "Test 1", "Test 2", "Test 3" }; */
    static int init = 0;
+   union RETROGUI_CTL ctl;
+   MERROR_RETVAL retval = MERROR_OK;
+
+   retrogui_lock( &(data->gui) );
 
    if( !init ) {
-      retrogui_add_listbox(
-         test_arr, 3, 0, 10, 10, 70, 60,
-         RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 101, 0, &(g_ctls[0]) );
 
-      retrogui_add_button( 
-         "Test", 90, 10, 50, 20,
-         RETROFLAT_COLOR_WHITE, RETROFLAT_COLOR_BLACK, 100, 0, &(g_ctls[1]) );
+      retrogui_init_ctl( &ctl, RETROGUI_CTL_TYPE_LISTBOX, 101 ); 
+      
+      ctl.base.x = 10;
+      ctl.base.y = 10;
+      ctl.base.w = 70;
+      ctl.base.h = 60;
+
+      retrogui_push_ctl( &(data->gui), &ctl );
+
+      retrogui_push_listbox_item( &(data->gui), 101, "Test 1", 6 );
+      retrogui_push_listbox_item( &(data->gui), 101, "Test 2", 6 );
+      retrogui_push_listbox_item( &(data->gui), 101, "Test 3", 6 );
+
+      retrogui_init_ctl( &ctl, RETROGUI_CTL_TYPE_BUTTON, 100 );
+
+      ctl.base.x = 90;
+      ctl.base.y = 10;
+      ctl.base.w = 50;
+      ctl.base.h = 20;
+      strncpy( ctl.BUTTON.label, "Test", 5 );
+
+      retrogui_push_ctl( &(data->gui), &ctl );
+
+      init = 1;
    }
 
    /* Input */
@@ -72,10 +96,10 @@ void demo_ctl_loop( void* data ) {
       break;
    }
 
-   input = retrogui_poll_ctls( input, &input_evt, g_ctls, 2 );
+   input = retrogui_poll_ctls( &(data->gui), input, &input_evt );
    switch( input ) {
    case 100:
-      printf( "%d\n", retrogui_get_ctl_sel_idx( &(g_ctls[0]) ) );
+      printf( SIZE_T_FMT "\n", retrogui_get_ctl_sel_idx( &(data->gui), 101 ) );
       break;
    }
 
@@ -88,9 +112,19 @@ void demo_ctl_loop( void* data ) {
       retroflat_screen_w(), retroflat_screen_h(),
       RETROFLAT_FLAGS_FILL );
 
-   retrogui_redraw_ctls( g_ctls, 2 );
+   retrogui_redraw_ctls( &(data->gui) );
 
    retroflat_draw_release( NULL );
+
+   retrogui_unlock( &(data->gui) );
+
+cleanup:
+
+   if( MERROR_OK != retval ) {
+      retroflat_quit( retval );
+   }
+
+   return;
 }
 
 int main( int argc, char** argv ) {
@@ -98,6 +132,7 @@ int main( int argc, char** argv ) {
    struct RETROFLAT_ARGS args;
    int i = 0;
    void* data = NULL;
+   struct DEMO_CTL_DATA data_ctl;
    const int negative_one = -1;
    RETROFLAT_CONFIG config;
 
@@ -164,7 +199,9 @@ int main( int argc, char** argv ) {
    /* === Main Loop === */
 
    if( g_config ) {
-      retroflat_loop( demo_ctl_loop, NULL );
+      retval = retrogui_init( &(data_ctl.gui) );
+      maug_cleanup_if_not_ok();
+      retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, &data_ctl );
    } else {
       retroflat_loop( gc_demo_loops[g_loop_idx], data );
    }
@@ -172,6 +209,10 @@ int main( int argc, char** argv ) {
 cleanup:
 
 #ifndef RETROFLAT_OS_WASM
+
+   if( g_config ) {
+      retrogui_free( &(data_ctl.gui) );
+   }
 
    retroflat_shutdown( retval );
 
