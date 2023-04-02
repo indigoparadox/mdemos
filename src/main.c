@@ -55,6 +55,7 @@ void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
    static int init = 0;
    union RETROGUI_CTL ctl;
    MERROR_RETVAL retval = MERROR_OK;
+   RETROGUI_IDC idc = RETROGUI_IDC_NONE;
 
    retrogui_lock( &(data->gui) );
 
@@ -96,8 +97,8 @@ void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
       break;
    }
 
-   input = retrogui_poll_ctls( &(data->gui), input, &input_evt );
-   switch( input ) {
+   idc = retrogui_poll_ctls( &(data->gui), &input, &input_evt );
+   switch( idc ) {
    case 100:
       printf( SIZE_T_FMT "\n", retrogui_get_ctl_sel_idx( &(data->gui), 101 ) );
       break;

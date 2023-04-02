@@ -48,9 +48,14 @@ void draw_sine_iter( struct SINE_DATA* data ) {
       input = 0;
    double y_offset = 0;
 
+   if( !data->init ) {
+      retrocon_init( &(data->con) );
+      data->init = 1;
+   }
+
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input );
+   retrocon_input( &(data->con), &input, &input_evt );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -119,13 +124,15 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
       data->y_c = SPHERE_RADIUS;
       data->pulse = 0;
 
+      retrocon_init( &(data->con) );
+
       data->init = 1;
    }
 
    assert( 0 == retroflat_screen_w() % data->x_v );
    assert( 0 == retroflat_screen_h() % data->y_v );
 
-   retrocon_input( &(data->con), &input );
+   retrocon_input( &(data->con), &input, &input_evt );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -237,12 +244,14 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
 
       create_starlines( data );
 
+      retrocon_init( &(data->con) );
+
       data->init = 1;
    }
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input );
+   retrocon_input( &(data->con), &input, &input_evt );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -361,12 +370,14 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
       data->pos_x = 3;
       data->pos_y = 2;
 
+      retrocon_init( &(data->con) );
+
       data->init = 1;
    }
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input );
+   retrocon_input( &(data->con), &input, &input_evt );
 
    switch( input ) {
    case RETROFLAT_KEY_UP:
@@ -501,9 +512,14 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    int input = 0;
    double i = 0;
 
+   if( !data->init ) {
+      retrocon_init( &(data->con) );
+      data->init = 1;
+   }
+
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input );
+   retrocon_input( &(data->con), &input, &input_evt );
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
