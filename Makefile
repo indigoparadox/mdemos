@@ -2,6 +2,9 @@
 # vim: ft=make noexpandtab
 
 SCREENSAVER=1
+OPENMP=1
+VDP=1
+#WING=1
 C_FILES := src/main.c src/demos.c
 
 LIBS_GCC := -lm
