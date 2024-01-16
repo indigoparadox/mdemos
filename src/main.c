@@ -49,7 +49,7 @@ static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
 }
 
 void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
-   int input = 0;
+   RETROFLAT_IN_KEY input = 0;
    struct RETROFLAT_INPUT input_evt;
    /* char* test_arr[] = { "Test 1", "Test 2", "Test 3" }; */
    static int init = 0;
