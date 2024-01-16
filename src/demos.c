@@ -1,10 +1,9 @@
 
+#define RETROANI_C
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include <maug.h>
 
 #define DEMOS_C
 #include "demos.h"
@@ -44,8 +43,8 @@ static void demos_draw_timer() {
 void draw_sine_iter( struct SINE_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    int x = 0,
-      x_prev = 0,
-      input = 0;
+      x_prev = 0;
+   RETROFLAT_IN_KEY input = 0;
    double y_offset = 0;
 
    if( !data->init ) {
@@ -112,7 +111,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
       or = 0,
       or_pulse = 0;
    struct RETROFLAT_INPUT input_evt;
-   int input = 0;
+   RETROFLAT_IN_KEY input = 0;
    RETROFLAT_COLOR color;
 
    input = retroflat_poll_input( &input_evt );
@@ -234,7 +233,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
       y_prev = 0,
       i = 0;
    struct RETROFLAT_INPUT input_evt;
-   int input = 0;
+   RETROFLAT_IN_KEY input = 0;
    double angle = 0;
 
    if( !(data->init) ) {
@@ -350,7 +349,7 @@ int cast_ray( int sx, int sy, float ray, int depth ) {
 void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    int x = 0;
    struct RETROFLAT_INPUT input_evt;
-   int input = 0;
+   RETROFLAT_IN_KEY input = 0;
    float ray = 0;
    float ray_next = 0;
    float wall_dist[320];
@@ -509,7 +508,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
 
 void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
-   int input = 0;
+   RETROFLAT_IN_KEY input = 0;
    double i = 0;
 
    if( !data->init ) {
@@ -557,6 +556,56 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
          (retroflat_screen_h() / 2) + (sin( i + data->rotate ) * 60),
          0 );
    }
+
+   retrocon_display( &(data->con), NULL );
+
+   demos_draw_timer();
+   demos_draw_fps();
+
+   retroflat_draw_release( NULL );
+}
+
+void draw_retroani_iter( struct RETROANI_DATA* data ) {
+   struct RETROFLAT_INPUT input_evt;
+   int16_t input = 0;
+
+   if( !data->init ) {
+      retrocon_init( &(data->con) );
+      data->init = 1;
+
+      retroani_create(
+         &(data->animations[0]), ANIMATIONS_MAX,
+         RETROANI_TYPE_FIRE, RETROANI_FLAG_CLEANUP,
+         0, retroflat_screen_h() - RETROANI_TILE_H, retroflat_screen_w(),
+         RETROANI_TILE_H );
+   }
+
+   input = retroflat_poll_input( &input_evt );
+
+   retrocon_input( &(data->con), &input, &input_evt );
+
+   switch( input ) {
+   case RETROFLAT_KEY_RIGHT:
+      break;
+
+   case RETROFLAT_KEY_LEFT:
+      break;
+
+   case RETROFLAT_KEY_ESC:
+      retroflat_quit( 0 );
+      break;
+   }
+
+   /* Drawing */
+
+   retroflat_draw_lock( NULL );
+
+   retroflat_rect(
+      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
+      retroflat_screen_w(), retroflat_screen_h(),
+      RETROFLAT_FLAGS_FILL );
+
+   retroani_frame( &(data->animations[0]), ANIMATIONS_MAX, 0 );
 
    retrocon_display( &(data->con), NULL );
 

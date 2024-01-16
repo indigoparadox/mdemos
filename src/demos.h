@@ -2,8 +2,10 @@
 #ifndef DEMOS_H
 #define DEMOS_H
 
+#include <maug.h>
 #include <retroflt.h>
 #include <retrocon.h>
+#include <retroani.h>
 
 #define STATUS_SZ 255
 
@@ -28,6 +30,8 @@
 #define RAYCAST_MINIMAP_SCALE 10
 
 #define SPHERE_RADIUS 40
+
+#define ANIMATIONS_MAX 10
 
 #define PI 3.14159
 
@@ -90,12 +94,19 @@ struct PRIMATIVES_DATA {
    float rotate;
 };
 
+struct RETROANI_DATA {
+   int init;
+   struct RETROCON con;
+   struct RETROANI animations[ANIMATIONS_MAX];
+};
+
 #define DEMOS_LIST( f ) \
    f( sine, struct SINE_DATA ) \
    f( sphere, struct SPHERE_DATA ) \
    f( starlines, struct STARLINE_DATA ) \
    f( primatives, struct PRIMATIVES_DATA ) \
-   f( raycast, struct RAYCAST_DATA )
+   f( raycast, struct RAYCAST_DATA ) \
+   f( retroani, struct RETROANI_DATA )
 
 #define DEMOS_LIST_PROTOS( name, data_struct ) \
    void draw_ ## name ## _iter( data_struct* data );
