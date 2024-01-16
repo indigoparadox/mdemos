@@ -139,10 +139,10 @@ int main( int argc, char** argv ) {
 
    /* === Setup === */
 
+   logging_init();
+
    maug_mzero( &args, sizeof( struct RETROFLAT_ARGS ) );
 
-   args.screen_w = 320;
-   args.screen_h = 200;
    args.title = "mdemo";
    args.assets_path = "";
 
@@ -202,9 +202,9 @@ int main( int argc, char** argv ) {
    if( g_config ) {
       retval = retrogui_init( &(data_ctl.gui) );
       maug_cleanup_if_not_ok();
-      retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, &data_ctl );
+      retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, NULL, &data_ctl );
    } else {
-      retroflat_loop( gc_demo_loops[g_loop_idx], data );
+      retroflat_loop( gc_demo_loops[g_loop_idx], NULL, data );
    }
 
 cleanup:
@@ -220,6 +220,8 @@ cleanup:
    if( NULL != data ) {
       free( data );
    }
+
+   logging_shutdown();
 
 #endif /* !RETROFLAT_OS_WASM */
 
