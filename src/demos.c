@@ -567,11 +567,16 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
 
 void draw_retroani_iter( struct RETROANI_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
-   int16_t input = 0;
+   RETROFLAT_IN_KEY input = 0;
 
    if( !data->init ) {
       retrocon_init( &(data->con) );
       data->init = 1;
+
+      retroani_create(
+         &(data->animations[0]), ANIMATIONS_MAX,
+         RETROANI_TYPE_SNOW, RETROANI_FLAG_CLEANUP,
+         0, 0, retroflat_screen_w(), retroflat_screen_h() - RETROANI_TILE_H );
 
       retroani_create(
          &(data->animations[0]), ANIMATIONS_MAX,
