@@ -605,11 +605,6 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
 
    retroflat_draw_lock( NULL );
 
-   retroflat_rect(
-      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
-      retroflat_screen_w(), retroflat_screen_h(),
-      RETROFLAT_FLAGS_FILL );
-
    retroani_frame( &(data->animations[0]), ANIMATIONS_MAX, 0 );
 
    retrocon_display( &(data->con), NULL );
