@@ -8,8 +8,6 @@ VDP=1
 C_FILES := src/main.c src/demos.c
 
 LIBS_GCC := -lm
-DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES
-DEFINES_GCC := -DRETROFLAT_SOFT_SHAPES
 
 include maug/Makefile.inc
 
@@ -37,6 +35,8 @@ $(eval $(call TGTWASMSDL,mdemo))
 # DOS
 
 $(eval $(call TGTDOSALE,mdemo))
+
+$(eval $(call TGTDOSBIOS,mdemo))
 
 # Win386
 
