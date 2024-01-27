@@ -191,7 +191,13 @@ int main( int argc, char** argv ) {
          2, "allocating data (" SIZE_T_FMT " bytes)...",
          gc_demo_data_sz[g_loop_idx] );
       data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
+      if( NULL == data ) {
+         error_printf( "could not allocate data!" );
+         retval = MERROR_ALLOC;
+         goto cleanup;
+      }
 
+      debug_printf( 1, "setting up console..." );
       ((struct MDEMOS_DATA*)data)->con.lbuffer_color = RETROFLAT_COLOR_WHITE;
       ((struct MDEMOS_DATA*)data)->con.sbuffer_color = RETROFLAT_COLOR_GRAY;
       ((struct MDEMOS_DATA*)data)->con.bg_color = RETROFLAT_COLOR_DARKBLUE;
@@ -200,10 +206,13 @@ int main( int argc, char** argv ) {
    /* === Main Loop === */
 
    if( g_config ) {
+      debug_printf( 1, "setting up GUI..." );
       retval = retrogui_init( &(data_ctl.gui) );
       maug_cleanup_if_not_ok();
+      debug_printf( 1, "jumping to demo loop..." );
       retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, NULL, &data_ctl );
    } else {
+      debug_printf( 1, "jumping to demo loop..." );
       retroflat_loop( gc_demo_loops[g_loop_idx], NULL, data );
    }
 

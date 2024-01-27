@@ -570,8 +570,13 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
    RETROFLAT_IN_KEY input = 0;
 
    if( !data->init ) {
+      debug_printf( 1, "initializing retroani demo..." );
+
+#ifndef RETROFLAT_OS_DOS_REAL
       retrocon_init( &(data->con) );
-      data->init = 1;
+#endif /* !RETROFLAT_OS_DOS_REAL */
+
+      debug_printf( 1, "creating animations..." );
 
       retroani_create(
          &(data->animations[0]), ANIMATIONS_MAX,
@@ -583,11 +588,16 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
          RETROANI_TYPE_FIRE, RETROANI_FLAG_CLEANUP,
          0, retroflat_screen_h() - RETROANI_TILE_H, retroflat_screen_w(),
          RETROANI_TILE_H );
+
+      debug_printf( 1, "initialization complete!" );
+      data->init = 1;
    }
 
    input = retroflat_poll_input( &input_evt );
 
+#ifndef RETROFLAT_OS_DOS_REAL
    retrocon_input( &(data->con), &input, &input_evt );
+#endif /* !RETROFLAT_OS_DOS_REAL */
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
@@ -607,7 +617,9 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
 
    retroani_frame( &(data->animations[0]), ANIMATIONS_MAX, 0 );
 
+#ifndef RETROFLAT_OS_DOS_REAL
    retrocon_display( &(data->con), NULL );
+#endif /* !RETROFLAT_OS_DOS_REAL */
 
    demos_draw_timer();
    demos_draw_fps();

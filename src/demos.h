@@ -31,7 +31,7 @@
 
 #define SPHERE_RADIUS 40
 
-#define ANIMATIONS_MAX 10
+#define ANIMATIONS_MAX 5
 
 #define PI 3.14159
 
@@ -96,7 +96,10 @@ struct PRIMATIVES_DATA {
 
 struct RETROANI_DATA {
    int init;
+#ifndef RETROFLAT_OS_DOS_REAL
+   /* Uses too much memory in real DOS! */
    struct RETROCON con;
+#endif /* !RETROFLAT_OS_DOS_REAL */
    struct RETROANI animations[ANIMATIONS_MAX];
 };
 
