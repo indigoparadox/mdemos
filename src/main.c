@@ -2,16 +2,6 @@
 #include <stdlib.h>
 
 #define MAUG_C
-#include <maug.h>
-
-#define RETROFLT_C
-#include <retroflt.h>
-
-#define RETROGUI_C
-#include <retrogui.h>
-
-#define RETROCON_C
-#include <retrocon.h>
 
 #include "demos.h"
 
