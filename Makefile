@@ -8,15 +8,15 @@ VDP=1
 C_FILES := src/main.c src/demos.c
 
 LIBS_GCC := -lm
-DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES
-DEFINES_GCC := -DRETROFLAT_SOFT_SHAPES
+#DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES
+#DEFINES_GCC := -DRETROFLAT_SOFT_SHAPES
 
 include maug/Makefile.inc
 
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe
+all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe
 
 $(eval $(call TGTNDSLIBN,mdemo,mdemo.bmp))
 

@@ -4,6 +4,8 @@
 
 #include <maug.h>
 #include <retroflt.h>
+#include <retrofnt.h>
+#include <retrogui.h>
 #include <retrocon.h>
 #include <retroani.h>
 
