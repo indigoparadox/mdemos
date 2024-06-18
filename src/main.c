@@ -143,6 +143,8 @@ int main( int argc, char** argv ) {
       MAUG_CLI_SIGIL "c", MAUG_CLI_SIGIL_SZ + 1, "show config dialog", 0,
       (maug_cli_cb)demo_cli_c, NULL, &args );
 
+   retroflat_config_init( &args );
+
    /* Add demos to CLI parser. */
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
       maug_add_arg(
