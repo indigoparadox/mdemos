@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define MAUG_C
+#define RETROANI_C
 
 #include "demos.h"
 

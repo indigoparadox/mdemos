@@ -6,6 +6,7 @@ OPENMP=1
 VDP=1
 #WING=1
 C_FILES := src/main.c src/demos.c
+RETROFLAT_DOS_MEM_LARGE=1
 
 LIBS_GCC := -lm
 #DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES
@@ -37,6 +38,8 @@ $(eval $(call TGTWASMSDL,mdemo))
 # DOS
 
 $(eval $(call TGTDOSALE,mdemo))
+
+$(eval $(call TGTDOSGAL,mdemo))
 
 $(eval $(call TGTDOSBIOS,mdemo))
 

@@ -1,5 +1,4 @@
 
-#define RETROANI_C
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
