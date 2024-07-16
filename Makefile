@@ -17,7 +17,7 @@ include maug/Makefile.inc
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe
+all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
 
 $(eval $(call TGTNDSLIBN,mdemo,mdemo.bmp))
 

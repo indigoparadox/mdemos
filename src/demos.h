@@ -36,9 +36,9 @@
 
 #define ANIMATIONS_MAX 5
 
-#define PI 3.14159
+#define DEMOS_PI 3.14159
 
-#define PI_4 (PI / 4)
+#define DEMOS_PI_4 (DEMOS_PI / 4)
 
 /* Convert Pico-8 "turns" into radians. */
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )

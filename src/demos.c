@@ -165,8 +165,8 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
    }
 
    /* Draw sphere. */
-   for( or = 0 ; 2 * PI > or ; or += 0.4 ) {
-      for( ir = 0 ; 2 * PI > ir ; ir += 0.4 ) {
+   for( or = 0 ; 2 * DEMOS_PI > or ; or += 0.4 ) {
+      for( ir = 0 ; 2 * DEMOS_PI > ir ; ir += 0.4 ) {
          if( 0 < data->pulse ) {
             /* Pulse dots in and out a bit? */
             or_pulse = or + ((-1 * data->pulse) + (rand() % (2 * data->pulse)));
@@ -209,8 +209,8 @@ void create_starlines( struct STARLINE_DATA* starlines ) {
       starlines->ang_inc[i] = STARLINE_ANG_INC;
       starlines->radius[i] = 
          STARLINE_RADIUS_MIN + (rand() % STARLINE_RADIUS_MAX);
-      starlines->ang_min[i] = fmod( (rand() * 0.1), PI ) 
-         - PI; /* Make angle negative since we're facing up. */
+      starlines->ang_min[i] = fmod( (rand() * 0.1), DEMOS_PI ) 
+         - DEMOS_PI; /* Make angle negative since we're facing up. */
       starlines->ang_max[i] = starlines->ang_min[i];
       starlines->flicker[i] = rand() % STARLINE_FLICKER_ODDS;
       starlines->flicker_odd[i] = rand() % 2;
@@ -311,7 +311,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
       if(
          data->start_at < retroflat_get_ms() &&
          /* 2PI is a full circle. */
-         data->ang_min[i] + (2 * PI) > data->ang_max[i]
+         data->ang_min[i] + (2 * DEMOS_PI) > data->ang_max[i]
       ) {
          data->ang_max[i] += data->ang_inc[i];
       }
@@ -362,7 +362,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
       data->plane_dist = (retroflat_screen_w() / 2) / tan( RAYCAST_FOV / 2 );
 
       /* Each ray is this many radians off to the right of the last. */
-      data->ray_inc = (2 * PI_4) / retroflat_screen_w();
+      data->ray_inc = (2 * DEMOS_PI_4) / retroflat_screen_w();
 
       /* Start off at this position on the tilemap. */
       data->pos_x = 3;
@@ -380,19 +380,23 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    switch( input ) {
    case RETROFLAT_KEY_UP:
       /* Move forward in facing dir. */
-      if( PI_4 <= data->facing && 3 * PI_4 > data->facing ) {
+      if( DEMOS_PI_4 <= data->facing && 3 * DEMOS_PI_4 > data->facing ) {
          /* Down */
          if( data->pos_y + 2 < RAYMAP_H ) {
             data->pos_y += 1;
          }
 
-      } else if( 3 * PI_4 <= data->facing && 5 * PI_4 > data->facing ) {
+      } else if(
+         3 * DEMOS_PI_4 <= data->facing && 5 * DEMOS_PI_4 > data->facing
+      ) {
          /* Left */
          if( data->pos_x - 2 >= 0 ) {
             data->pos_x -= 1;
          }
 
-      } else if( 5 * PI_4 <= data->facing && 7 * PI_4 > data->facing ) {
+      } else if(
+         5 * DEMOS_PI_4 <= data->facing && 7 * DEMOS_PI_4 > data->facing
+      ) {
          /* Up */
          if( data->pos_y - 2 >= 0 ) {
             data->pos_y -= 1;
