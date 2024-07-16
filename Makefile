@@ -12,6 +12,8 @@ LIBS_GCC := -lm
 #DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES
 #DEFINES_GCC := -DRETROFLAT_SOFT_SHAPES
 CFLAGS_OPT_GCC_NDS += -DMDEMO_NO_OPTIONS
+GLOBAL_DEFINES += -DRETROFLAT_NO_STRING
+GLOBAL_DEFINES += -DRETROCON_DISABLE
 
 include maug/Makefile.inc
 
@@ -19,6 +21,8 @@ include maug/Makefile.inc
 .PHONY: clean
 
 all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
+
+$(eval $(call MVFS,unscii-8.hex))
 
 $(eval $(call TGTNDSLIBN,mdemo,mdemo.bmp))
 

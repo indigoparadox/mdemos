@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #define MAUG_C
-#define RETROANI_C
 
 #include "demos.h"
 
@@ -131,7 +130,7 @@ int main( int argc, char** argv ) {
    int retval = 0;
    struct RETROFLAT_ARGS args;
    int i = 0;
-   void* data = NULL;
+   union MDEMOS_DATA* data = NULL;
 #ifndef MDEMO_NO_OPTIONS
    struct DEMO_CTL_DATA data_ctl;
 #endif /* !MDEMO_NO_OPTIONS */
@@ -193,7 +192,7 @@ int main( int argc, char** argv ) {
       debug_printf(
          2, "allocating data (" SIZE_T_FMT " bytes)...",
          gc_demo_data_sz[g_loop_idx] );
-      data = calloc( 1, gc_demo_data_sz[g_loop_idx] );
+      data = calloc( 1, sizeof( union MDEMOS_DATA ) );
       if( NULL == data ) {
          error_printf( "could not allocate data!" );
          retval = MERROR_ALLOC;
@@ -201,9 +200,9 @@ int main( int argc, char** argv ) {
       }
 
       debug_printf( 1, "setting up console..." );
-      ((struct MDEMOS_DATA*)data)->con.lbuffer_color = RETROFLAT_COLOR_WHITE;
-      ((struct MDEMOS_DATA*)data)->con.sbuffer_color = RETROFLAT_COLOR_GRAY;
-      ((struct MDEMOS_DATA*)data)->con.bg_color = RETROFLAT_COLOR_DARKBLUE;
+      data->base.con.lbuffer_color = RETROFLAT_COLOR_WHITE;
+      data->base.con.sbuffer_color = RETROFLAT_COLOR_GRAY;
+      data->base.con.bg_color = RETROFLAT_COLOR_DARKBLUE;
    }
 
    /* === Main Loop === */
@@ -217,6 +216,8 @@ int main( int argc, char** argv ) {
       retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, NULL, &data_ctl );
 #endif /* MDEMO_NO_OPTIONS */
    } else {
+      retrofont_load( "unscii-8.hex", &(data->base.font_h), 8, 33, 93 );
+
       debug_printf( 1, "jumping to demo loop..." );
       retroflat_loop( gc_demo_loops[g_loop_idx], NULL, data );
    }
@@ -232,6 +233,8 @@ cleanup:
 #endif /* !MDEMO_NO_OPTIONS */
 
    retroflat_shutdown( retval );
+
+   maug_mfree( data->base.font_h );
 
    if( NULL != data ) {
       free( data );

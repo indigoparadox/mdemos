@@ -46,20 +46,23 @@
 #define psin( t ) sin( ((t * 6.28318) / 1.0f) )
 #define pcos( t ) cos( ((t * 6.28318) / 1.0f) )
 
-struct MDEMOS_DATA {
+struct BASE_DATA {
    int init;
    struct RETROCON con;
+   MAUG_MHANDLE font_h;
 };
 
 struct SINE_DATA {
    int init;
    struct RETROCON con;
+   MAUG_MHANDLE font_h;
    int x_iter;
 };
 
 struct SPHERE_DATA {
    int init;
    RETROFLAT_COLOR color;
+   MAUG_MHANDLE font_h;
    int pulse;
    int x_v;
    int y_v;
@@ -72,6 +75,7 @@ struct SPHERE_DATA {
 struct STARLINE_DATA {
    int init;
    struct RETROCON con;
+   MAUG_MHANDLE font_h;
    uint32_t start_at;
    double ang_min[STARLINES_SZ];
    double ang_max[STARLINES_SZ];
@@ -85,6 +89,7 @@ struct STARLINE_DATA {
 struct RAYCAST_DATA {
    int init;
    struct RETROCON con;
+   MAUG_MHANDLE font_h;
    float facing;
    uint8_t* map;
    float plane_dist;
@@ -96,6 +101,7 @@ struct RAYCAST_DATA {
 struct PRIMATIVES_DATA {
    int init;
    struct RETROCON con;
+   MAUG_MHANDLE font_h;
    float rotate;
 };
 
@@ -106,6 +112,16 @@ struct RETROANI_DATA {
    struct RETROCON con;
 #endif /* !RETROFLAT_OS_DOS_REAL */
    struct RETROANI animations[ANIMATIONS_MAX];
+};
+
+union MDEMOS_DATA {
+   struct BASE_DATA base;
+   struct SINE_DATA sine;
+   struct SPHERE_DATA sphere;
+   struct STARLINE_DATA starline;
+   struct RAYCAST_DATA raycast;
+   struct PRIMATIVES_DATA primatives;
+   struct RETROANI_DATA retroani;
 };
 
 #define DEMOS_LIST( f ) \
