@@ -9,9 +9,13 @@
 static int g_loop_idx = -1;
 static int g_config = 0;
 
+#ifndef MDEMO_NO_OPTIONS
+
 struct DEMO_CTL_DATA {
    struct RETROGUI gui;
 };
+
+#endif /* !MDEMO_NO_OPTIONS */
 
 static int demo_cli_c( const char* arg, struct RETROFLAT_ARGS* args ) {
    g_config = 1;
@@ -38,6 +42,8 @@ static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    debug_printf( 3, "timer enabled" );
    return RETROFLAT_OK;
 }
+
+#ifndef MDEMO_NO_OPTIONS
 
 void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
    RETROFLAT_IN_KEY input = 0;
@@ -119,12 +125,16 @@ cleanup:
    return;
 }
 
+#endif /* !MDEMO_NO_OPTIONS */
+
 int main( int argc, char** argv ) {
    int retval = 0;
    struct RETROFLAT_ARGS args;
    int i = 0;
    void* data = NULL;
+#ifndef MDEMO_NO_OPTIONS
    struct DEMO_CTL_DATA data_ctl;
+#endif /* !MDEMO_NO_OPTIONS */
    const int negative_one = -1;
    RETROFLAT_CONFIG config;
 
@@ -199,11 +209,13 @@ int main( int argc, char** argv ) {
    /* === Main Loop === */
 
    if( g_config ) {
+#ifndef MDEMO_NO_OPTIONS
       debug_printf( 1, "setting up GUI..." );
       retval = retrogui_init( &(data_ctl.gui) );
       maug_cleanup_if_not_ok();
       debug_printf( 1, "jumping to demo loop..." );
       retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, NULL, &data_ctl );
+#endif /* MDEMO_NO_OPTIONS */
    } else {
       debug_printf( 1, "jumping to demo loop..." );
       retroflat_loop( gc_demo_loops[g_loop_idx], NULL, data );
@@ -213,9 +225,11 @@ cleanup:
 
 #ifndef RETROFLAT_OS_WASM
 
+#ifndef MDEMO_NO_OPTIONS
    if( g_config ) {
       retrogui_free( &(data_ctl.gui) );
    }
+#endif /* !MDEMO_NO_OPTIONS */
 
    retroflat_shutdown( retval );
 

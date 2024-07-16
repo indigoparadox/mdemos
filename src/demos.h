@@ -6,7 +6,9 @@
 #include <retroflt.h>
 #include <retrocfg.h>
 #include <retrofnt.h>
+#ifndef MDEMO_NO_OPTIONS
 #include <retrogui.h>
+#endif /* !MDEMO_NO_OPTIONS */
 #include <retrocon.h>
 #include <retroani.h>
 
