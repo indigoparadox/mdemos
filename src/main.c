@@ -179,7 +179,7 @@ int main( int argc, char** argv ) {
    retval = MERROR_OK;
 
    if( 0 > g_loop_idx ) {
-      g_loop_idx = rand() % i;
+      g_loop_idx = retroflat_get_rand() % i;
       debug_printf( 3, "auto-selecting demo loop (%d of %d): %s",
          g_loop_idx, i, gc_demo_names[g_loop_idx] );
    } else {

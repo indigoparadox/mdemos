@@ -48,34 +48,34 @@
 
 struct BASE_DATA {
    int init;
-   struct RETROCON con;
    MAUG_MHANDLE font_h;
+   struct RETROCON con;
 };
 
 struct SINE_DATA {
    int init;
-   struct RETROCON con;
    MAUG_MHANDLE font_h;
+   struct RETROCON con;
    int x_iter;
 };
 
 struct SPHERE_DATA {
    int init;
-   RETROFLAT_COLOR color;
    MAUG_MHANDLE font_h;
+   struct RETROCON con;
+   RETROFLAT_COLOR color;
    int pulse;
    int x_v;
    int y_v;
    int x_c;
    int y_c;
    float m;
-   struct RETROCON con;
 };
 
 struct STARLINE_DATA {
    int init;
-   struct RETROCON con;
    MAUG_MHANDLE font_h;
+   struct RETROCON con;
    uint32_t start_at;
    double ang_min[STARLINES_SZ];
    double ang_max[STARLINES_SZ];
@@ -88,8 +88,8 @@ struct STARLINE_DATA {
 
 struct RAYCAST_DATA {
    int init;
-   struct RETROCON con;
    MAUG_MHANDLE font_h;
+   struct RETROCON con;
    float facing;
    uint8_t* map;
    float plane_dist;
@@ -100,13 +100,14 @@ struct RAYCAST_DATA {
 
 struct PRIMATIVES_DATA {
    int init;
-   struct RETROCON con;
    MAUG_MHANDLE font_h;
+   struct RETROCON con;
    float rotate;
 };
 
 struct RETROANI_DATA {
    int init;
+   MAUG_MHANDLE font_h;
 #ifndef RETROFLAT_OS_DOS_REAL
    /* Uses too much memory in real DOS! */
    struct RETROCON con;

@@ -27,8 +27,8 @@ static void demos_draw_fps( void* v_data ) {
 
    maug_snprintf( status, STATUS_SZ, "%lu", g_frames_per_sec );
    retrofont_string(
-      NULL, RETROFLAT_COLOR_WHITE, status, 0,
-      data->base.font_h, 10, 10, 0, 0, 0 );
+      NULL, RETROFLAT_COLOR_RED, status, 0,
+      data->base.font_h, 10, 10, 0, 0, RETROFLAT_FLAGS_OUTLINE );
 }
 
 static void demos_draw_timer( void* v_data ) {
@@ -38,8 +38,8 @@ static void demos_draw_timer( void* v_data ) {
    if( g_timer ) {
       maug_snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
       retrofont_string(
-         NULL, RETROFLAT_COLOR_WHITE, status, 0,
-         data->base.font_h, 10, 20, 0, 0, 0 );
+         NULL, RETROFLAT_COLOR_RED, status, 0,
+         data->base.font_h, 10, 20, 0, 0, RETROFLAT_FLAGS_OUTLINE );
    }
 }
 
