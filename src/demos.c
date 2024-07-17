@@ -49,6 +49,7 @@ void draw_sine_iter( struct SINE_DATA* data ) {
       x_prev = 0;
    RETROFLAT_IN_KEY input = 0;
    double y_offset = 0;
+   retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    if( !data->init ) {
       data->init = 1;
@@ -56,18 +57,12 @@ void draw_sine_iter( struct SINE_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-
-#ifndef RETROCON_DISABLE
-   case RETROFLAT_KEY_GRAVE:
-      retrocon_push_win( &(data->con), 0, NULL, 0 );
-      break;
-#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -121,6 +116,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    RETROFLAT_IN_KEY input = 0;
    RETROFLAT_COLOR color;
+   retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    input = retroflat_poll_input( &input_evt );
 
@@ -137,18 +133,12 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
    assert( 0 == retroflat_screen_w() % data->x_v );
    assert( 0 == retroflat_screen_h() % data->y_v );
 
-   retrocon_input( &(data->con), &input, &input_evt );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-
-#ifndef RETROCON_DISABLE
-   case RETROFLAT_KEY_GRAVE:
-      retrocon_push_win( &(data->con), 0, NULL, 0 );
-      break;
-#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -247,6 +237,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    RETROFLAT_IN_KEY input = 0;
    double angle = 0;
+   retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    if( !(data->init) ) {
       /* Do initial setup. */
@@ -260,18 +251,12 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-
-#ifndef RETROCON_DISABLE
-   case RETROFLAT_KEY_GRAVE:
-      retrocon_push_win( &(data->con), 0, NULL, 0 );
-      break;
-#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -371,6 +356,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    float wall_dist[320];
    int wall_line = 0;
    RETROFLAT_COLOR wall_color;
+   retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    if( !(data->init) ) {
       /* Do initial setup. */
@@ -390,7 +376,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
    switch( input ) {
    case RETROFLAT_KEY_UP:
@@ -442,12 +428,6 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-
-#ifndef RETROCON_DISABLE
-   case RETROFLAT_KEY_GRAVE:
-      retrocon_push_win( &(data->con), 0, NULL, 0 );
-      break;
-#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -534,6 +514,7 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    RETROFLAT_IN_KEY input = 0;
    double i = 0;
+   retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    if( !data->init ) {
       data->init = 1;
@@ -541,7 +522,7 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
@@ -555,12 +536,6 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-
-#ifndef RETROCON_DISABLE
-   case RETROFLAT_KEY_GRAVE:
-      retrocon_push_win( &(data->con), 0, NULL, 0 );
-      break;
-#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -597,6 +572,7 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
 void draw_retroani_iter( struct RETROANI_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    RETROFLAT_IN_KEY input = 0;
+   retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    if( !data->init ) {
       debug_printf( 1, "initializing retroani demo..." );
@@ -620,9 +596,7 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-#ifndef RETROFLAT_OS_DOS_REAL
-   retrocon_input( &(data->con), &input, &input_evt );
-#endif /* !RETROFLAT_OS_DOS_REAL */
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
@@ -634,12 +608,6 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
-
-#ifndef RETROCON_DISABLE
-   case RETROFLAT_KEY_GRAVE:
-      retrocon_push_win( &(data->con), 0, NULL, 0 );
-      break;
-#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -648,9 +616,7 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
 
    retroani_frame( &(data->animations[0]), ANIMATIONS_MAX, 0 );
 
-#ifndef RETROFLAT_OS_DOS_REAL
    retrocon_display( &(data->con), NULL );
-#endif /* !RETROFLAT_OS_DOS_REAL */
 
    demos_draw_timer( data );
    demos_draw_fps( data );
