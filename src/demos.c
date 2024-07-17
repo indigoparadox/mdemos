@@ -51,7 +51,6 @@ void draw_sine_iter( struct SINE_DATA* data ) {
    double y_offset = 0;
 
    if( !data->init ) {
-      retrocon_init( &(data->con) );
       data->init = 1;
    }
 
@@ -63,6 +62,12 @@ void draw_sine_iter( struct SINE_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
+
+#ifndef RETROCON_DISABLE
+   case RETROFLAT_KEY_GRAVE:
+      retrocon_push_win( &(data->con), 0, NULL, 0 );
+      break;
+#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -126,8 +131,6 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
       data->y_c = SPHERE_RADIUS;
       data->pulse = 0;
 
-      retrocon_init( &(data->con) );
-
       data->init = 1;
    }
 
@@ -140,6 +143,12 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
+
+#ifndef RETROCON_DISABLE
+   case RETROFLAT_KEY_GRAVE:
+      retrocon_push_win( &(data->con), 0, NULL, 0 );
+      break;
+#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -246,8 +255,6 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
 
       create_starlines( data );
 
-      retrocon_init( &(data->con) );
-
       data->init = 1;
    }
 
@@ -259,6 +266,12 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
+
+#ifndef RETROCON_DISABLE
+   case RETROFLAT_KEY_GRAVE:
+      retrocon_push_win( &(data->con), 0, NULL, 0 );
+      break;
+#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -372,8 +385,6 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
       data->pos_x = 3;
       data->pos_y = 2;
 
-      retrocon_init( &(data->con) );
-
       data->init = 1;
    }
 
@@ -431,6 +442,12 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
+
+#ifndef RETROCON_DISABLE
+   case RETROFLAT_KEY_GRAVE:
+      retrocon_push_win( &(data->con), 0, NULL, 0 );
+      break;
+#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -519,7 +536,6 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    double i = 0;
 
    if( !data->init ) {
-      retrocon_init( &(data->con) );
       data->init = 1;
    }
 
@@ -539,6 +555,12 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
+
+#ifndef RETROCON_DISABLE
+   case RETROFLAT_KEY_GRAVE:
+      retrocon_push_win( &(data->con), 0, NULL, 0 );
+      break;
+#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */
@@ -579,10 +601,6 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
    if( !data->init ) {
       debug_printf( 1, "initializing retroani demo..." );
 
-#ifndef RETROFLAT_OS_DOS_REAL
-      retrocon_init( &(data->con) );
-#endif /* !RETROFLAT_OS_DOS_REAL */
-
       debug_printf( 1, "creating animations..." );
 
       retroani_create(
@@ -616,6 +634,12 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
    case RETROFLAT_KEY_ESC:
       retroflat_quit( 0 );
       break;
+
+#ifndef RETROCON_DISABLE
+   case RETROFLAT_KEY_GRAVE:
+      retrocon_push_win( &(data->con), 0, NULL, 0 );
+      break;
+#endif /* !RETROCON_DISABLE */
    }
 
    /* Drawing */

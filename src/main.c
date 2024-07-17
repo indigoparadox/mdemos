@@ -51,7 +51,7 @@ void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
    static int init = 0;
    union RETROGUI_CTL ctl;
    MERROR_RETVAL retval = MERROR_OK;
-   RETROGUI_IDC idc = RETROGUI_IDC_NONE;
+   retrogui_idc_t idc = RETROGUI_IDC_NONE;
 
    retrogui_lock( &(data->gui) );
 
@@ -205,6 +205,11 @@ int main( int argc, char** argv ) {
       data->base.con.bg_color = RETROFLAT_COLOR_DARKBLUE;
    }
 
+   retrocon_init( &(data->base.con), "unscii-8.hex",
+      (retroflat_screen_w() >> 1) - 100,
+      (retroflat_screen_h() >> 1) - 50,
+      200, 100 );
+
    /* === Main Loop === */
 
    if( g_config ) {
@@ -225,6 +230,8 @@ int main( int argc, char** argv ) {
 cleanup:
 
 #ifndef RETROFLAT_OS_WASM
+
+   retrocon_shutdown( &(data->base.con) );
 
 #ifndef MDEMO_NO_OPTIONS
    if( g_config ) {
