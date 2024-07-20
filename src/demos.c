@@ -28,7 +28,7 @@ static void demos_draw_fps( void* v_data ) {
    maug_snprintf( status, STATUS_SZ, "%lu", g_frames_per_sec );
    retrofont_string(
       NULL, RETROFLAT_COLOR_RED, status, 0,
-      data->base.font_h, 10, 10, 0, 0, RETROFLAT_FLAGS_OUTLINE );
+      data->base.font_h, 10, 10, 0, 0, RETROFONT_FLAG_OUTLINE );
 }
 
 static void demos_draw_timer( void* v_data ) {
@@ -39,7 +39,7 @@ static void demos_draw_timer( void* v_data ) {
       maug_snprintf( status, STATUS_SZ, "%lu", retroflat_get_ms() );
       retrofont_string(
          NULL, RETROFLAT_COLOR_RED, status, 0,
-         data->base.font_h, 10, 20, 0, 0, RETROFLAT_FLAGS_OUTLINE );
+         data->base.font_h, 10, 20, 0, 0, RETROFONT_FLAG_OUTLINE );
    }
 }
 
@@ -129,9 +129,6 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
 
       data->init = 1;
    }
-
-   assert( 0 == retroflat_screen_w() % data->x_v );
-   assert( 0 == retroflat_screen_h() % data->y_v );
 
    retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
 
