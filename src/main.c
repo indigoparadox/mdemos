@@ -115,8 +115,6 @@ void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
 
    retrogui_unlock( &(data->gui) );
 
-cleanup:
-
    if( MERROR_OK != retval ) {
       retroflat_quit( retval );
    }

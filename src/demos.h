@@ -108,10 +108,7 @@ struct PRIMATIVES_DATA {
 struct RETROANI_DATA {
    int init;
    MAUG_MHANDLE font_h;
-#ifndef RETROFLAT_OS_DOS_REAL
-   /* Uses too much memory in real DOS! */
    struct RETROCON con;
-#endif /* !RETROFLAT_OS_DOS_REAL */
    struct RETROANI animations[ANIMATIONS_MAX];
 };
 

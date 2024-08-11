@@ -57,7 +57,7 @@ void draw_sine_iter( struct SINE_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -130,7 +130,7 @@ void draw_sphere_iter( struct SPHERE_DATA* data ) {
       data->init = 1;
    }
 
-   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -248,7 +248,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL );
 
    switch( input ) {
    case RETROFLAT_KEY_ESC:
@@ -373,7 +373,7 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL );
 
    switch( input ) {
    case RETROFLAT_KEY_UP:
@@ -519,7 +519,7 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL );
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
@@ -593,7 +593,7 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
 
    input = retroflat_poll_input( &input_evt );
 
-   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL, 0 );
+   retrocon_input( &(data->con), &input, &input_evt, &idc_con, NULL );
 
    switch( input ) {
    case RETROFLAT_KEY_RIGHT:
