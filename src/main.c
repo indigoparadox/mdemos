@@ -16,12 +16,18 @@ struct DEMO_CTL_DATA {
 
 #endif /* !MDEMO_NO_OPTIONS */
 
-static int demo_cli_c( const char* arg, struct RETROFLAT_ARGS* args ) {
-   g_config = 1;
+static int demo_cli_c(
+   const char* arg, ssize_t arg_c, struct RETROFLAT_ARGS* args
+) {
+   if( 1 == arg_c ) {
+      g_config = 1;
+   }
    return RETROFLAT_OK;
 }
 
-static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
+static int demo_cli_cb(
+   const char* arg, ssize_t arg_c, struct RETROFLAT_ARGS* args
+) {
    int i = 0;
 
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
@@ -36,9 +42,13 @@ static int demo_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
    return RETROFLAT_OK;
 }
 
-static int demo_timer_cli_cb( const char* arg, struct RETROFLAT_ARGS* args ) {
-   g_timer = 1;
-   debug_printf( 3, "timer enabled" );
+static int demo_timer_cli_cb(
+   const char* arg, ssize_t arg_c, struct RETROFLAT_ARGS* args
+) {
+   if( 1 == arg_c ) {
+      g_timer = 1;
+      debug_printf( 3, "timer enabled" );
+   }
    return RETROFLAT_OK;
 }
 
@@ -146,10 +156,10 @@ int main( int argc, char** argv ) {
 
    maug_add_arg(
       MAUG_CLI_SIGIL "t", MAUG_CLI_SIGIL_SZ + 1, "show the on-screen timer", 0,
-      (maug_cli_cb)demo_timer_cli_cb, NULL, &args );
+      (maug_cli_cb)demo_timer_cli_cb, &args );
    maug_add_arg(
       MAUG_CLI_SIGIL "c", MAUG_CLI_SIGIL_SZ + 1, "show config dialog", 0,
-      (maug_cli_cb)demo_cli_c, NULL, &args );
+      (maug_cli_cb)demo_cli_c, &args );
 
    retroflat_config_init( &args );
 
@@ -157,7 +167,7 @@ int main( int argc, char** argv ) {
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
       maug_add_arg(
          gc_demo_names[i], 0, "display this demo", 0,
-         (maug_cli_cb)demo_cli_cb, NULL, &args );
+         (maug_cli_cb)demo_cli_cb, &args );
    }
 
    retval = retroflat_init( argc, argv, &args );
@@ -229,7 +239,9 @@ cleanup:
 
 #ifndef RETROFLAT_OS_WASM
 
-   retrocon_shutdown( &(data->base.con) );
+   if( NULL != data ) {
+      retrocon_shutdown( &(data->base.con) );
+   }
 
 #ifndef MDEMO_NO_OPTIONS
    if( g_config ) {
@@ -239,7 +251,9 @@ cleanup:
 
    retroflat_shutdown( retval );
 
-   maug_mfree( data->base.font_h );
+   if( NULL != data ) {
+      maug_mfree( data->base.font_h );
+   }
 
    if( NULL != data ) {
       free( data );
