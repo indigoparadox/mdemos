@@ -510,7 +510,6 @@ void draw_raycast_iter( struct RAYCAST_DATA* data ) {
 void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    RETROFLAT_IN_KEY input = 0;
-   double i = 0;
    retrogui_idc_t idc_con = RETROGUI_IDC_NONE;
 
    if( !data->init ) {
@@ -549,6 +548,7 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
       (retroflat_screen_h() / 2) - 20,
       40, 40, 0 );
 
+   /*
    for( i = 0 ; RETROFLAT_PI * 2 > i ; i += (RETROFLAT_PI / 4) ) {
       retroflat_line( NULL, RETROFLAT_COLOR_BLUE,
          (retroflat_screen_w() / 2) + (cos( i + data->rotate ) * 30),
@@ -557,6 +557,7 @@ void draw_primatives_iter( struct PRIMATIVES_DATA* data ) {
          (retroflat_screen_h() / 2) + (sin( i + data->rotate ) * 60),
          0 );
    }
+   */
 
    retrocon_display( &(data->con), NULL );
 
@@ -577,13 +578,11 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
       debug_printf( 1, "creating animations..." );
 
       retroani_create(
-         &(data->animations[0]), ANIMATIONS_MAX,
-         RETROANI_TYPE_SNOW, RETROANI_FLAG_CLEANUP,
+         &(data->animations), RETROANI_TYPE_SNOW, RETROANI_FLAG_CLEANUP,
          0, 0, retroflat_screen_w(), retroflat_screen_h() - RETROANI_TILE_H );
 
       retroani_create(
-         &(data->animations[0]), ANIMATIONS_MAX,
-         RETROANI_TYPE_FIRE, RETROANI_FLAG_CLEANUP,
+         &(data->animations), RETROANI_TYPE_FIRE, RETROANI_FLAG_CLEANUP,
          0, retroflat_screen_h() - RETROANI_TILE_H, retroflat_screen_w(),
          RETROANI_TILE_H );
 
@@ -603,6 +602,7 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
       break;
 
    case RETROFLAT_KEY_ESC:
+      retroani_stop_all( &(data->animations) );
       retroflat_quit( 0 );
       break;
    }
@@ -611,7 +611,7 @@ void draw_retroani_iter( struct RETROANI_DATA* data ) {
 
    retroflat_draw_lock( NULL );
 
-   retroani_frame( &(data->animations[0]), ANIMATIONS_MAX, 0 );
+   retroani_frame( &(data->animations), 0 );
 
    retrocon_display( &(data->con), NULL );
 

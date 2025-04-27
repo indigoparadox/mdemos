@@ -6,9 +6,8 @@
 #include <retroflt.h>
 #include <retrocfg.h>
 #include <retrofnt.h>
-#ifndef MDEMO_NO_OPTIONS
 #include <retrogui.h>
-#endif /* !MDEMO_NO_OPTIONS */
+#include <retrowin.h>
 #include <retrocon.h>
 #include <retroani.h>
 
@@ -109,7 +108,7 @@ struct RETROANI_DATA {
    int init;
    MAUG_MHANDLE font_h;
    struct RETROCON con;
-   struct RETROANI animations[ANIMATIONS_MAX];
+   struct MDATA_VECTOR animations;
 };
 
 union MDEMOS_DATA {
