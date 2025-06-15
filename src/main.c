@@ -30,6 +30,10 @@ static int demo_cli_cb(
 ) {
    int i = 0;
 
+   if( 0 == strncmp( arg, MAUG_CLI_SIGIL "c", MAUG_CLI_SIGIL_SZ + 2 ) ) {
+      return RETROFLAT_OK;
+   }
+
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
       if( 0 == strncmp( gc_demo_names[i], arg, strlen( gc_demo_names[i] ) ) ) {
          g_loop_idx = i;
@@ -163,12 +167,10 @@ int main( int argc, char** argv ) {
 
    retroflat_config_init( &args );
 
-   /* Add demos to CLI parser. */
-   for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
-      maug_add_arg(
-         gc_demo_names[i], 0, "display this demo", 0,
-         (maug_cli_cb)demo_cli_cb, &args );
-   }
+   maug_add_arg(
+      MAUG_CLI_SIGIL "d", MAUG_CLI_SIGIL_SZ + 1, "display specified demo", 0,
+      /* TODO: Add demo list with macro. */
+      (maug_cli_cb)demo_cli_cb, &args );
 
    retval = retroflat_init( argc, argv, &args );
    if( RETROFLAT_OK != retval ) {
@@ -186,6 +188,11 @@ int main( int argc, char** argv ) {
    }
    retval = MERROR_OK;
 
+   /* Count demos on offer. */
+   for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
+   }
+
+   /* Select from demos if none specified. */
    if( 0 > g_loop_idx ) {
       g_loop_idx = retroflat_get_rand() % i;
       debug_printf( 3, "auto-selecting demo loop (%d of %d): %s",
@@ -196,6 +203,7 @@ int main( int argc, char** argv ) {
          gc_demo_names[g_loop_idx], g_loop_idx );
    }
 
+   /* Allocate demo data. */
    if( 0 < gc_demo_data_sz[g_loop_idx] ) {
       debug_printf(
          2, "allocating data (" SIZE_T_FMT " bytes)...",

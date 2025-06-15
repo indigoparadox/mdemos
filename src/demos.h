@@ -111,6 +111,12 @@ struct RETROANI_DATA {
    struct MDATA_VECTOR animations;
 };
 
+struct SOFTCUBE_DATA {
+   int init;
+   MAUG_MHANDLE font_h;
+   struct RETROCON con;
+};
+
 union MDEMOS_DATA {
    struct BASE_DATA base;
    struct SINE_DATA sine;
@@ -119,6 +125,7 @@ union MDEMOS_DATA {
    struct RAYCAST_DATA raycast;
    struct PRIMATIVES_DATA primatives;
    struct RETROANI_DATA retroani;
+   struct SOFTCUBE_DATA softcube;
 };
 
 #define DEMOS_LIST( f ) \
@@ -127,7 +134,8 @@ union MDEMOS_DATA {
    f( starlines, struct STARLINE_DATA ) \
    f( primatives, struct PRIMATIVES_DATA ) \
    f( raycast, struct RAYCAST_DATA ) \
-   f( retroani, struct RETROANI_DATA )
+   f( retroani, struct RETROANI_DATA ) \
+   f( softcube, struct SOFTCUBE_DATA )
 
 #define DEMOS_LIST_PROTOS( name, data_struct ) \
    void draw_ ## name ## _iter( data_struct* data );
