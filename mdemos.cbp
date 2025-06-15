@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="mdemos" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="mdemo.sdl">
+				<Option output="mdemo.sdl" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="maug/src/marge.h" />
+		<Unit filename="maug/src/maug.h" />
+		<Unit filename="maug/src/mcss.h" />
+		<Unit filename="maug/src/mcssmerg.h" />
+		<Unit filename="maug/src/mdata.h" />
+		<Unit filename="maug/src/merror.h" />
+		<Unit filename="maug/src/mfile.h" />
+		<Unit filename="maug/src/mfix.h" />
+		<Unit filename="maug/src/mfmt.h" />
+		<Unit filename="maug/src/mfont8x8.h" />
+		<Unit filename="maug/src/mgrid.h" />
+		<Unit filename="maug/src/mhtml.h" />
+		<Unit filename="maug/src/mjson.h" />
+		<Unit filename="maug/src/mlegacy.h" />
+		<Unit filename="maug/src/mlispe.h" />
+		<Unit filename="maug/src/mlispp.h" />
+		<Unit filename="maug/src/mlisps.h" />
+		<Unit filename="maug/src/mmem.h" />
+		<Unit filename="maug/src/mparser.h" />
+		<Unit filename="maug/src/mplug.h" />
+		<Unit filename="maug/src/msect.h" />
+		<Unit filename="maug/src/mtypes.h" />
+		<Unit filename="maug/src/retro3d.h" />
+		<Unit filename="maug/src/retro3dp.h" />
+		<Unit filename="maug/src/retro3du.h" />
+		<Unit filename="maug/src/retroani.h" />
+		<Unit filename="maug/src/retrocfg.h" />
+		<Unit filename="maug/src/retrocon.h" />
+		<Unit filename="maug/src/retroflt.h" />
+		<Unit filename="maug/src/retrofnt.h" />
+		<Unit filename="maug/src/retrofp.h" />
+		<Unit filename="maug/src/retroglu.h" />
+		<Unit filename="maug/src/retrogui.h" />
+		<Unit filename="maug/src/retrogxc.h" />
+		<Unit filename="maug/src/retrohtr.h" />
+		<Unit filename="maug/src/retropth.h" />
+		<Unit filename="maug/src/retrosft.h" />
+		<Unit filename="maug/src/retrosnd.h" />
+		<Unit filename="maug/src/retrotil.h" />
+		<Unit filename="maug/src/retrow3d.h" />
+		<Unit filename="maug/src/retroxpm.h" />
+		<Unit filename="maug/src/uprintf.h" />
+		<Unit filename="src/demos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/demos.h" />
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
