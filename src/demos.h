@@ -142,17 +142,10 @@ union MDEMOS_DATA {
 
 DEMOS_LIST( DEMOS_LIST_PROTOS )
 
-#ifdef DEMOS_C
+void demos_draw_fps( void* v_data );
+void demos_draw_timer( void* v_data );
 
-const uint8_t gc_raymap[RAYMAP_H][RAYMAP_W] = {
-   { 5, 5, 5, 5, 5, 5 },
-   { 5, 0, 0, 0, 0, 5 },
-   { 5, 0, 0, 0, 0, 5 },
-   { 5, 5, 0, 0, 0, 5 },
-   { 5, 0, 0, 0, 0, 5 },
-   { 5, 0, 0, 0, 0, 5 },
-   { 5, 5, 5, 5, 5, 5 }
-};
+#ifdef DEMOS_C
 
 #define DEMOS_LIST_NAMES( name, data_struct ) #name,
 

@@ -5,7 +5,7 @@ SCREENSAVER=1
 OPENMP=1
 VDP=1
 #WING=1
-C_FILES := src/main.c src/demos.c
+C_FILES := src/main.c src/demos.c $(wildcard src/dm_*.c)
 RETROFLAT_DOS_MEM_LARGE=1
 
 LIBS_GCC := -lm
@@ -28,6 +28,8 @@ all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.ex
 $(eval $(call MVFS,unscii-8.hex))
 
 $(eval $(call TGTNDSLIBN,mdemo,mdemo.bmp))
+
+$(eval $(call TGTMAC68K,mdemo))
 
 # Unix (Allegro)
 
