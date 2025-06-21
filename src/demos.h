@@ -55,7 +55,7 @@ struct SINE_DATA {
    int init;
    MAUG_MHANDLE font_h;
    struct RETROCON con;
-   int x_iter;
+   retroflat_pxxy_t x_iter;
 };
 
 struct SPHERE_DATA {
