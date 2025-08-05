@@ -69,6 +69,12 @@ $(eval $(call TGTWINNTGCC,mdemo))
 
 $(eval $(call TGTWIN64GCC,mdemo))
 
+$(eval $(call TGT_CECL_WINCE_SH3,mdemo))
+
+$(eval $(call TGT_CECL_WINCE_MIPS,mdemo))
+
+$(eval $(call TGT_CECL_WINCE_X86,mdemo))
+
 # Clean
 
 clean:

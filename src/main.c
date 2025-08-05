@@ -16,6 +16,8 @@ struct DEMO_CTL_DATA {
 
 #endif /* !MDEMO_NO_OPTIONS */
 
+#ifndef RETROFLAT_NO_CLI
+
 static int demo_cli_c(
    const char* arg, ssize_t arg_c, struct RETROFLAT_ARGS* args
 ) {
@@ -55,6 +57,8 @@ static int demo_timer_cli_cb(
    }
    return RETROFLAT_OK;
 }
+
+#endif /* RETROFLAT_NO_CLI */
 
 #ifndef MDEMO_NO_OPTIONS
 
@@ -158,12 +162,14 @@ int main( int argc, char** argv ) {
    args.title = "mdemo";
    args.assets_path = "";
 
+#ifndef MAUG_NO_CLI 
    maug_add_arg(
       MAUG_CLI_SIGIL "t", MAUG_CLI_SIGIL_SZ + 1, "show the on-screen timer", 0,
       (maug_cli_cb)demo_timer_cli_cb, &args );
    maug_add_arg(
       MAUG_CLI_SIGIL "c", MAUG_CLI_SIGIL_SZ + 1, "show config dialog", 0,
       (maug_cli_cb)demo_cli_c, &args );
+#endif /* MAUG_NO_CLI */
 
    retroflat_config_init( &args );
 
