@@ -162,14 +162,12 @@ int main( int argc, char** argv ) {
    args.title = "mdemo";
    args.assets_path = "";
 
-#ifndef MAUG_NO_CLI 
    maug_add_arg(
       MAUG_CLI_SIGIL "t", MAUG_CLI_SIGIL_SZ + 1, "show the on-screen timer", 0,
       (maug_cli_cb)demo_timer_cli_cb, &args );
    maug_add_arg(
       MAUG_CLI_SIGIL "c", MAUG_CLI_SIGIL_SZ + 1, "show config dialog", 0,
       (maug_cli_cb)demo_cli_c, &args );
-#endif /* MAUG_NO_CLI */
 
    retroflat_config_init( &args );
 
@@ -198,6 +196,9 @@ int main( int argc, char** argv ) {
    for( i = 0 ; '\0' != gc_demo_names[i][0] ; i++ ) {
    }
 
+#ifdef MDEMO_FORCE_DEMO
+   g_loop_idx = MDEMO_FORCE_DEMO;
+#else
    /* Select from demos if none specified. */
    if( 0 > g_loop_idx ) {
       g_loop_idx = retroflat_get_rand() % i;
@@ -208,6 +209,7 @@ int main( int argc, char** argv ) {
          "demo loop specified in command line or config: %s (%d)",
          gc_demo_names[g_loop_idx], g_loop_idx );
    }
+#endif /* MDEMO_FORCE_DEMO */
 
    /* Allocate demo data. */
    if( 0 < gc_demo_data_sz[g_loop_idx] ) {
@@ -227,7 +229,7 @@ int main( int argc, char** argv ) {
       data->base.con.bg_color = RETROFLAT_COLOR_DARKBLUE;
    }
 
-   retrocon_init( &(data->base.con), "unscii-8.hex",
+   retrocon_init( &(data->base.con), "unscii_8.hex",
       (retroflat_screen_w() >> 1) - 100,
       (retroflat_screen_h() >> 1) - 50,
       200, 100 );
@@ -243,7 +245,7 @@ int main( int argc, char** argv ) {
       retroflat_loop( (retroflat_loop_iter)demo_ctl_loop, NULL, &data_ctl );
 #endif /* MDEMO_NO_OPTIONS */
    } else {
-      retrofont_load( "unscii-8.hex", &(data->base.font_h), 8, 33, 93 );
+      retrofont_load( "unscii_8.hex", &(data->base.font_h), 8, 33, 93 );
 
       debug_printf( 1, "jumping to demo loop..." );
       retroflat_loop( gc_demo_loops[g_loop_idx], NULL, data );

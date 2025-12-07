@@ -14,9 +14,15 @@ LIBS_GCC := -lm
 CFLAGS_OPT_GCC_NDS += -DMDEMO_NO_OPTIONS
 GLOBAL_DEFINES += -DRETROFLAT_NO_STRING
 #GLOBAL_DEFINES += -DRETROCON_DISABLE
-GLOBAL_DEFINES += -DRETROCON_TRACE_LVL=1
-GLOBAL_DEFINES += -DRETROGUI_TRACE_LVL=1
-GLOBAL_DEFINES += -DRETROFLAT_NO_RETROGXC
+#GLOBAL_DEFINES += -DRETROCON_TRACE_LVL=1
+#GLOBAL_DEFINES += -DRETROGUI_TRACE_LVL=1
+#GLOBAL_DEFINES += -DRETROFLAT_NO_RETROGXC
+#GLOBAL_DEFINES += -DRETROFLAT_NO_CLI
+#GLOBAL_DEFINES += -DMFILE_TRACE_LVL=1
+# Sphere
+GLOBAL_DEFINES += -DMDEMO_FORCE_DEMO=1
+# Retroani
+#GLOBAL_DEFINES += -DMDEMO_FORCE_DEMO=5
 
 include maug/Makefile.inc
 
@@ -25,9 +31,11 @@ include maug/Makefile.inc
 
 all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
 
-$(eval $(call MVFS,unscii-8.hex))
+$(eval $(call MVFS,unscii_8.hex))
 
 $(eval $(call TGTNDSLIBN,mdemo,mdemo.bmp))
+
+$(eval $(call TGTWIILIBO,mdemo))
 
 $(eval $(call TGTMAC68K,mdemo))
 
