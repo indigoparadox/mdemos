@@ -71,8 +71,6 @@ void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
    MERROR_RETVAL retval = MERROR_OK;
    retrogui_idc_t idc = RETROGUI_IDC_NONE;
 
-   retrogui_lock( &(data->gui) );
-
    if( !init ) {
 
       retrogui_init_ctl( &ctl, RETROGUI_CTL_TYPE_LISTBOX, 101 ); 
@@ -130,8 +128,6 @@ void demo_ctl_loop( struct DEMO_CTL_DATA* data ) {
    retrogui_redraw_ctls( &(data->gui) );
 
    retroflat_draw_release( NULL );
-
-   retrogui_unlock( &(data->gui) );
 
    if( MERROR_OK != retval ) {
       retroflat_quit( retval );
@@ -261,7 +257,7 @@ cleanup:
 
 #ifndef MDEMO_NO_OPTIONS
    if( g_config ) {
-      retrogui_free( &(data_ctl.gui) );
+      retrogui_destroy( &(data_ctl.gui) );
    }
 #endif /* !MDEMO_NO_OPTIONS */
 

@@ -20,7 +20,7 @@ GLOBAL_DEFINES += -DRETROFLAT_NO_STRING
 #GLOBAL_DEFINES += -DRETROFLAT_NO_CLI
 #GLOBAL_DEFINES += -DMFILE_TRACE_LVL=1
 # Sphere
-GLOBAL_DEFINES += -DMDEMO_FORCE_DEMO=1
+#GLOBAL_DEFINES += -DMDEMO_FORCE_DEMO=1
 # Retroani
 #GLOBAL_DEFINES += -DMDEMO_FORCE_DEMO=5
 
@@ -29,7 +29,7 @@ include maug/Makefile.inc
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo.ale mdemo.sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
+all: mdemo.$(shell uname -m).ale mdemo.$(shell uname -m).sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
 
 $(eval $(call MVFS,unscii_8.hex))
 
