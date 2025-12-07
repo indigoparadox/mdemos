@@ -29,7 +29,7 @@ include maug/Makefile.inc
 # Target-specific options.
 .PHONY: clean
 
-all: mdemo.$(shell uname -m).ale mdemo.$(shell uname -m).sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
+all: mdemo.$(MAUG_UNIX).ale mdemo.$(MAUG_UNIX).sdl mdemod.exe mdemow.exe mdemont.exe mdemo.html mdemo64.exe mdemontg.exe mdemow3.exe mdemob.exe
 
 $(eval $(call MVFS,unscii_8.hex))
 
