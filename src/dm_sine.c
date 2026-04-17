@@ -1,6 +1,8 @@
 
 #include "demos.h"
 
+#include <math.h>
+
 void draw_sine_iter( struct SINE_DATA* data ) {
    struct RETROFLAT_INPUT input_evt;
    retroflat_pxxy_t x_prev = 0;

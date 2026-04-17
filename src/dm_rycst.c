@@ -1,6 +1,8 @@
 
 #include "demos.h"
 
+#include <math.h>
+
 const uint8_t gc_raymap[RAYMAP_H][RAYMAP_W] = {
    { 5, 5, 5, 5, 5, 5 },
    { 5, 0, 0, 0, 0, 5 },

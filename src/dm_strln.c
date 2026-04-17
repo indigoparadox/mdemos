@@ -1,6 +1,8 @@
 
 #include "demos.h"
 
+#include <math.h>
+
 void create_starlines( struct STARLINE_DATA* starlines ) {
    int i = 0;
 

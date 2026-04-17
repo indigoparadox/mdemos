@@ -1,6 +1,8 @@
 
 #include "demos.h"
 
+#include <math.h>
+
 void draw_sphere_iter( struct SPHERE_DATA* data ) {
    double x = 0,
       y = 0,
