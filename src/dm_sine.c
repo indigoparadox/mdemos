@@ -12,10 +12,7 @@ void draw_sine_iter( struct SINE_DATA* data ) {
 
    if( !data->init ) {
       data->init = 1;
-      retroflat_rect(
-         NULL, RETROFLAT_COLOR_BLACK, 0, 0,
-         retroflat_screen_w(), retroflat_screen_h(),
-         RETROFLAT_FLAGS_FILL );
+      retroflat_blank( NULL, RETROFLAT_COLOR_BLACK );
    }
 
    input = retroflat_poll_input( &input_evt );
@@ -62,10 +59,7 @@ void draw_sine_iter( struct SINE_DATA* data ) {
    if( retroflat_screen_w() <= data->x_iter ) {
       debug_printf( 1, "reset from " SIZE_T_FMT " to 0", data->x_iter );
       data->x_iter = 0;
-      retroflat_rect(
-         NULL, RETROFLAT_COLOR_BLACK, 0, 0,
-         retroflat_screen_w(), retroflat_screen_h(),
-         RETROFLAT_FLAGS_FILL );
+      retroflat_blank( NULL, RETROFLAT_COLOR_BLACK );
    }
 }
 

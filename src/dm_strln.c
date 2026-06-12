@@ -61,10 +61,7 @@ void draw_starlines_iter( struct STARLINE_DATA* data ) {
 
    retroflat_draw_lock( NULL );
 
-   retroflat_rect(
-      NULL, RETROFLAT_COLOR_BLACK, 0, 0,
-      retroflat_screen_w(), retroflat_screen_h(),
-      RETROFLAT_FLAGS_FILL );
+   retroflat_blank( NULL, RETROFLAT_COLOR_BLACK );
 
    for( i = 0 ; STARLINES_SZ > i ; i++ ) {
 
