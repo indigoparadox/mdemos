@@ -7,6 +7,7 @@ VDP=1
 #WING=1
 C_FILES := src/main.c src/demos.c $(wildcard src/dm_*.c)
 RETROFLAT_DOS_MEM_LARGE=1
+@SDL_VER_UNIX := 1
 
 LIBS_GCC := -lm
 #DEFINES_WATCOM := -DRETROFLAT_SOFT_SHAPES

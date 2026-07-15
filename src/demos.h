@@ -117,6 +117,19 @@ struct SOFTCUBE_DATA {
    struct RETROCON con;
 };
 
+struct PALETTE_DATA {
+   int init;
+   struct RETROCON con;
+   uint32_t color;
+   int timer;
+};
+
+struct HALL_DATA {
+   int init;
+   struct RETROCON con;
+   int x_offset;
+};
+
 union MDEMOS_DATA {
    struct BASE_DATA base;
    struct SINE_DATA sine;
@@ -126,6 +139,8 @@ union MDEMOS_DATA {
    struct PRIMATIVES_DATA primatives;
    struct RETROANI_DATA retroani;
    struct SOFTCUBE_DATA softcube;
+   struct PALETTE_DATA palette;
+   struct HALL_DATA hall;
 };
 
 #define DEMOS_LIST( f ) \
@@ -135,7 +150,9 @@ union MDEMOS_DATA {
    f( primatives, struct PRIMATIVES_DATA ) \
    f( raycast, struct RAYCAST_DATA ) \
    f( retroani, struct RETROANI_DATA ) \
-   f( softcube, struct SOFTCUBE_DATA )
+   f( softcube, struct SOFTCUBE_DATA ) \
+   f( palette, struct PALETTE_DATA ) \
+   f( hall, struct HALL_DATA )
 
 #define DEMOS_LIST_PROTOS( name, data_struct ) \
    void draw_ ## name ## _iter( data_struct* data );
